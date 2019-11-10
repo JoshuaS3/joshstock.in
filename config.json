@@ -1,0 +1,11 @@
+{
+	"articles": [
+		{
+			"title": "Creating a Remote Control Snow Plow",
+			"date": "FEB 19 2019",
+			"banner": "https://i.imgur.com/usMtR75.png",
+			"summary": "Designing and building a remote control snow plow; writing the Arduino controller",
+			"content": ""
+		}
+	]
+}

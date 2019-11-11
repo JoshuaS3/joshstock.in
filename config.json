@@ -1,11 +1,26 @@
 {
+	"copyright": "Copyright (c) Joshua 'joshuas3' Stockin 2019",
+	"templates": {
+		"blog-archive": "resources/templates/blog-archive.html",
+		"blog-article": "resources/templates/blog-article.html",
+		"blog-archive-listing": "resources/templates/blog-archive-listing.html",
+		"blog-css": "resources/templates/blog.css",
+		"landing": "resources/landing.html"
+	},
 	"articles": [
 		{
 			"title": "Creating a Remote Control Snow Plow",
 			"date": "FEB 19 2019",
 			"banner": "https://i.imgur.com/usMtR75.png",
 			"summary": "Designing and building a remote control snow plow; writing the Arduino controller",
-			"content": ""
+			"content": "resources/articles/snow-plow.html"
+		},
+		{
+			"title": "Exploring Embedded Systems",
+			"date": "NOV 10 2019",
+			"banner": "https://i.imgur.com/a8e58zu.png",
+			"summary": "Writing an ESP32 program using interrupts with the FreeRTOS API",
+			"content": "resources/articles/snow-plow.html"
 		}
 	]
 }

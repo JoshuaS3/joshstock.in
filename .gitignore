@@ -1,2 +1,5 @@
 # Sublime Text Project files
 *.sublime-*
+
+# Compiled site files
+compiled/

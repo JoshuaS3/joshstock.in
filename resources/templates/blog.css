@@ -24,6 +24,7 @@ code {
 	display: inline-block;
 	box-sizing: border-box;
 	white-space: pre-wrap;
+	overflow: scroll;
 }
 #copyright {
 	padding: 20px 0;

@@ -1,4 +1,5 @@
 @import url('https://fonts.googleapis.com/css?family=Fira+Sans:400,400i,500&display=swap');
+@import url('https://fonts.googleapis.com/css?family=Fira+Mono&display=swap');
 body {
 	font-family: 'Fira Sans', sans-serif;
 	color: #252525;
@@ -11,6 +12,18 @@ p {
 }
 a {
 	color: #0077a4;
+}
+code {
+	font-family: 'Fira Mono', monospace;
+}
+.code {
+	width: 100%;
+	padding: 15px;
+	margin-bottom: 20px;
+	background-color: #eeeeee;
+	display: inline-block;
+	box-sizing: border-box;
+	white-space: pre-wrap;
 }
 #copyright {
 	padding: 20px 0;
@@ -31,12 +44,14 @@ a {
 }
 .blog-img-right {
 	max-height: 400px;
-	margin: 5px 0 5px 20px;
+	max-width: 50%;
+	margin: 10px 0 10px 20px;
 	float: right;
 }
 .blog-img-left {
 	max-height: 400px;
-	margin: 5px 20px 5px 0;
+	max-width: 50%;
+	margin: 10px 20px 10px 0;
 	float: left;
 }
 .blog-listing {
@@ -44,4 +59,10 @@ a {
 }
 .blog-listing code {
 	margin-right: 10px;
+}
+
+@media (max-width: 800px) {
+	.blog-banner {
+		height: 30vw;
+	}
 }

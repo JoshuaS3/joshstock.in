@@ -5,7 +5,8 @@
 		"blog-article": "resources/templates/blog-article.html",
 		"blog-archive-listing": "resources/templates/blog-archive-listing.html",
 		"blog-css": "resources/templates/blog.css",
-		"landing": "resources/landing.html"
+		"landing": "resources/landing.html",
+		"404": "resources/templates/error.html"
 	},
 	"articles": [
 		{

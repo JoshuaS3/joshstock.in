@@ -6,6 +6,7 @@
 		"blog-archive-listing": "resources/templates/blog-archive-listing.html",
 		"blog-css": "resources/templates/blog.css",
 		"landing": "resources/landing.html",
+		"privacy": "resources/privacy.html",
 		"404": "resources/templates/error.html"
 	},
 	"articles": [

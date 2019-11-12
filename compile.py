@@ -40,6 +40,13 @@ def main():
 	writefile(file, landing)
 	routemap("/", file)
 
+	# Privacy
+	print("creating privacy policy page")
+	privacy = readfile(config["templates"]["privacy"])
+	file = os.path.join(out_path, "privacy.html")
+	writefile(file, privacy)
+	routemap("/privacy", file)
+
 	# /blog*
 	print("creating blog articles")
 	listings = ""

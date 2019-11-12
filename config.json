@@ -1,5 +1,5 @@
 {
-	"copyright": "Copyright (c) Joshua 'joshuas3' Stockin 2019",
+	"copyright": "Copyright (c) Joshua 'joshuas3' Stockin 2019 - <a href=\"/privacy\">Privacy</a>",
 	"templates": {
 		"blog-archive": "resources/templates/blog-archive.html",
 		"blog-article": "resources/templates/blog-article.html",

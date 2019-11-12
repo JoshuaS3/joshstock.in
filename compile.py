@@ -63,6 +63,7 @@ def main():
 		articlehtml = articlehtml.replace("$date", article["date"])
 		articlehtml = articlehtml.replace("$banner", article["banner"])
 		articlehtml = articlehtml.replace("$content", readfile(article["content"]))
+		articlehtml = articlehtml.replace("$summary", article["summary"])
 		articlehtml = articlehtml.replace("$copyright", config["copyright"])
 		file = os.path.join(out_path, "blog-"+article["title"].lower().replace(" ", "-")+".html")
 		path = "/blog/"+article["title"].lower().replace(" ", "-")

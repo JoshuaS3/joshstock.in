@@ -4,6 +4,8 @@ import sys
 import os
 import json
 
+os.chdir(sys.path[0])
+
 def readfile(filename):
 	try:
 		with open(filename, "r") as file:

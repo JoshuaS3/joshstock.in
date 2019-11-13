@@ -1,6 +1,6 @@
-# joshuas3.com
+# joshstock.in
 
-Source code for compilation of the static joshuas3.com
+Source code for compilation of the static joshstock.in
 
 ## Usage
 

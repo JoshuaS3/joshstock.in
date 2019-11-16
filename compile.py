@@ -2,6 +2,7 @@
 
 import sys
 import os
+import shutil
 import json
 
 os.chdir(sys.path[0])
@@ -34,6 +35,8 @@ def empty_dir(path):
 		try:
 			if os.path.isfile(filepath):
 				os.unlink(filepath)
+			elif os.path.isdir(filepath):
+				shutil.rmtree(filepath)
 		except Exception as e:
 			print("error while trying to empty working directory")
 			print(e)
@@ -47,7 +50,12 @@ def main():
 	print("emptying working directory")
 	empty_dir(out_path)
 
+	print("reading config")
 	config = json.loads(readfile("config.json"))
+
+	# Static
+	print("copying static")
+	shutil.copytree(config["static"], os.path.join(out_path, "static"))
 
 	# Index
 	print("creating landing")
@@ -59,6 +67,7 @@ def main():
 	# Privacy
 	print("creating privacy policy page")
 	privacy = readfile(config["templates"]["privacy"])
+	privacy = privacy.replace("$copyright", config["copyright"])
 	file = os.path.join(out_path, "privacy.html")
 	writefile(file, privacy)
 	routemap("/privacy", file)

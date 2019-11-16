@@ -1,5 +1,6 @@
 {
-	"copyright": "Copyright (c) Joshua 'joshuas3' Stockin 2019 - <a href=\"/privacy\">Privacy</a>",
+	"copyright": "<hr><p>Copyright (c) Joshua 'joshuas3' Stockin 2019 - <a href=\"/\">Home</a> - <a href=\"/blog\">Blog</a> - <a href=\"/privacy\">Privacy</a></p>",
+	"static": "resources/static",
 	"templates": {
 		"blog-archive": "resources/templates/blog-archive.html",
 		"blog-article": "resources/templates/blog-article.html",
@@ -11,18 +12,11 @@
 	},
 	"articles": [
 		{
-			"title": "Creating a Remote Control Snow Plow",
-			"date": "FEB 19 2019",
-			"banner": "https://i.imgur.com/usMtR75.png",
-			"summary": "Designing and building a remote control snow plow; writing the Arduino controller",
-			"content": "resources/articles/snow-plow.html"
-		},
-		{
-			"title": "Exploring Embedded Systems",
-			"date": "NOV 10 2019",
-			"banner": "https://i.imgur.com/a8e58zu.png",
-			"summary": "Writing an ESP32 program using interrupts with the FreeRTOS API",
-			"content": "resources/articles/snow-plow.html"
+			"title": "Creating a Website",
+			"date": "NOV 12 2019",
+			"banner": "/static/landing.png",
+			"summary": "Learning how to compile a blog and host a static site with nginx",
+			"content": "resources/articles/website-creation.html"
 		}
 	]
 }

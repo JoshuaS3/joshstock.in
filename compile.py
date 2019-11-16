@@ -28,11 +28,25 @@ def writefile(filename, text):
 		print("can't open " + filename + " for writing. exiting")
 		exit(1)
 
+def empty_dir(path):
+	for file in os.listdir(path):
+		filepath = os.path.join(path, file)
+		try:
+			if os.path.isfile(filepath):
+				os.unlink(filepath)
+		except Exception as e:
+			print("error while trying to empty working directory")
+			print(e)
+			exit(1)
+
 routemaps = {}
 def routemap(route, file):
 	routemaps[route] = file
 
 def main():
+	print("emptying working directory")
+	empty_dir(out_path)
+
 	config = json.loads(readfile("config.json"))
 
 	# Index

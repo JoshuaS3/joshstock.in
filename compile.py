@@ -5,8 +5,6 @@ import os
 import shutil
 import json
 
-os.chdir(sys.path[0])
-
 def readfile(filename):
 	try:
 		with open(filename, "r") as file:
@@ -43,8 +41,16 @@ def empty_dir(path):
 			exit(1)
 
 routemaps = {}
-def routemap(route, file):
-	routemaps[route] = file
+sitemap = """<?xml version="1.0" encoding="UTF-8"?>
+<urlset
+      xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"
+      xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+      xsi:schemaLocation="http://www.sitemaps.org/schemas/sitemap/0.9
+            http://www.sitemaps.org/schemas/sitemap/0.9/sitemap.xsd">"""
+def routemap(route, priority=0.5):
+	routemaps[route] = True
+	global sitemap
+	sitemap += "<url><loc>https://joshstock.in" + route + "</loc><priority>" + str(priority) + "</priority></url>"
 
 def main():
 	print("emptying working directory")
@@ -62,7 +68,7 @@ def main():
 	landing = readfile(config["templates"]["landing"])
 	file = os.path.join(out_path, "index.html")
 	writefile(file, landing)
-	routemap("/", file)
+	routemap("/", 1.0)
 
 	# Privacy
 	print("creating privacy policy page")
@@ -70,7 +76,7 @@ def main():
 	privacy = privacy.replace("$copyright", config["copyright"])
 	file = os.path.join(out_path, "privacy.html")
 	writefile(file, privacy)
-	routemap("/privacy", file)
+	routemap("/privacy", 0.5)
 
 	# /blog*
 	print("creating blog articles")
@@ -94,7 +100,7 @@ def main():
 		path = "/blog/"+article["title"].lower().replace(" ", "-")
 		articlehtml = articlehtml.replace("$permalink", path)
 		writefile(file, articlehtml)
-		routemap(path, file)
+		routemap(path, 0.7)
 
 		# Update archive listings
 		listinghtml = "" + article_listing_template
@@ -113,7 +119,7 @@ def main():
 	archive_template = archive_template.replace("$copyright", config["copyright"])
 	file = os.path.join(out_path, "blog.html")
 	writefile(file, archive_template)
-	routemap("/blog", file)
+	routemap("/blog", 0.9)
 
 	# Error 404
 	print("creating 404 error page")
@@ -122,9 +128,10 @@ def main():
 	writefile(file, e404)
 
 	# Routemap config
-	print("Routemap:")
-	for map in routemaps:
-		print(map)
+	print("writing sitemap to sitemap.xml")
+	global sitemap
+	sitemap += "</urlset>"
+	writefile(os.path.join(out_path, "sitemap.xml"), sitemap)
 
 if __name__ == "__main__":
 	if len(sys.argv) < 2:
@@ -132,6 +139,8 @@ if __name__ == "__main__":
 		exit(1)
 	folder_out = sys.argv[1]
 	print("compile.py starting")
+	print("changing active directory to script location")
+	os.chdir(sys.path[0])
 	if not os.path.isdir(folder_out):
 		print(folder_out + " is not a valid folder location. exiting")
 		exit(1)

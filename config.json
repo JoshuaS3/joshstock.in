@@ -1,5 +1,5 @@
 {
-	"copyright": "<hr><p>Copyright (c) Joshua 'joshuas3' Stockin 2019 - <a href=\"/\">Home</a> - <a href=\"/blog\">Blog</a> - <a href=\"/privacy\">Privacy</a></p>",
+	"copyright": "<hr><p>Copyright (c) 2019 Joshua 'joshuas3' Stockin - <a href=\"/\">Home</a> - <a href=\"/blog\">Blog</a> - <a href=\"/privacy\">Privacy</a></p>",
 	"static": "resources/static",
 	"templates": {
 		"blog-archive": "resources/templates/blog-archive.html",
@@ -12,10 +12,10 @@
 	},
 	"articles": [
 		{
-			"title": "Creating a Website",
-			"date": "NOV 12 2019",
+			"title": "Creating a Statically Hosted Website",
+			"date": "NOV 16 2019",
 			"banner": "/static/landing.png",
-			"summary": "Learning how to compile a blog and host a static site with nginx",
+			"summary": "Creating a statically hosted website; writing a custom HTML template compiler in Python, configuring nginx and serving HTML pages and static files",
 			"content": "resources/articles/website-creation.html"
 		}
 	]

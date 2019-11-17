@@ -16,15 +16,9 @@ a {
 code {
 	font-family: 'Fira Mono', monospace;
 }
-.code {
-	width: 100%;
-	padding: 15px;
-	margin-bottom: 20px;
-	background-color: #eeeeee;
-	display: inline-block;
-	box-sizing: border-box;
-	white-space: pre-wrap;
-	overflow: scroll;
+.gist .gist-file {
+	overflow: auto;
+	margin: 0;
 }
 #copyright {
 	padding: 20px 0;
@@ -42,17 +36,23 @@ code {
 	background-size: cover;
 	background-position: center;
 	margin: 0;
+	user-select: none;
+}
+.blog-img-full {
+	max-width: 100%;
+	display: inline-block;
+	margin: 10px 0 10px 0;
 }
 .blog-img-right {
-	max-height: 400px;
+	max-height: 500px;
 	max-width: 50%;
-	margin: 10px 0 10px 20px;
+	margin: 0 0 10px 20px;
 	float: right;
 }
 .blog-img-left {
-	max-height: 400px;
+	max-height: 500px;
 	max-width: 50%;
-	margin: 10px 20px 10px 0;
+	margin: 0 20px 10px 0;
 	float: left;
 }
 .blog-listing {
@@ -65,8 +65,16 @@ code {
 	margin-right: 10px;
 }
 
-@media (max-width: 800px) {
+@media (max-width: 840px) {
 	.blog-banner {
 		height: 30vw;
+	}
+	.blog-img-right, .blog-img-left {
+		max-width: 50%;
+	}
+}
+@media (max-width: 500px) {
+	.blog-banner {
+		height: 40vw;
 	}
 }

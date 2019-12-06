@@ -12,7 +12,7 @@
 	},
 	"articles": [
 		{
-			"title": "Creating a Statically Hosted Website",
+			"title": "Creating My Website Stack",
 			"date": "NOV 16 2019",
 			"banner": "/static/landing.png",
 			"summary": "Creating a statically hosted website; writing a custom HTML template compiler in Python, configuring nginx and serving HTML pages and static files",

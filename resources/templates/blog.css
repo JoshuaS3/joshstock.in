@@ -17,6 +17,9 @@ code {
 	overflow: auto;
 	margin: 0;
 }
+.gist table {
+	table-layout: fixed;
+}
 #copyright {
 	padding: 20px 0;
 }

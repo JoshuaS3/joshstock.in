@@ -11,7 +11,7 @@
 		<meta property="og:type" content="website" />
 		<meta property="og:image" content="$banner" />
 		<meta property="og:url" content="https://joshstock.in$permalink" />
-		<style>$css</style>
+		<link rel="stylesheet" href="/blog.css">
 		<meta name="viewport" content="width=device-width, initial-scale=1">
 	</head>
 	<body>
@@ -19,8 +19,9 @@
 			<span><a href="/blog">← Back to archive</a></span>
 			<h1>Josh Stockin</h1>
 			<img class="blog-banner" style="background-image: url($banner)"/>
-			<h2>$title</h2>
-			<p><code>$date</code></p>
+			<h2 class="blog-top-1">$title</h2>
+			<p class="blog-top-2"><code>$date</code></p>
+			<hr>
 			$content
 			<p><a href="$permalink">Article Permalink</a></p>
 			<div id="disqus_thread"></div>
@@ -36,7 +37,7 @@
 			(d.head || d.body).appendChild(s);
 			})();
 			</script>
-			<noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+			<noscript><p>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</p></a></noscript>
 			$copyright
 		</div>
 	</body>

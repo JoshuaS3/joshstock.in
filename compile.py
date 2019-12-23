@@ -63,12 +63,22 @@ def main():
 	print("copying static")
 	shutil.copytree(config["static"], os.path.join(out_path, "static"))
 
+	# Favicon
+	print("copying favicon")
+	shutil.copy(config["templates"]["favicon"], os.path.join(out_path, "favicon.ico"))
+
 	# Index
 	print("creating landing")
 	landing = readfile(config["templates"]["landing"])
 	file = os.path.join(out_path, "index.html")
 	writefile(file, landing)
 	routemap("/", 1.0)
+
+	# CSS
+	print("copying CSS source")
+	blog_css = readfile(config["templates"]["blog-css"])
+	file = os.path.join(out_path, "blog.css")
+	writefile(file, blog_css)
 
 	# Privacy
 	print("creating privacy policy page")
@@ -83,13 +93,11 @@ def main():
 	listings = ""
 	article_listing_template = readfile(config["templates"]["blog-archive-listing"])
 	article_template = readfile(config["templates"]["blog-article"])
-	blog_css = readfile(config["templates"]["blog-css"])
 
 	for article in config["articles"]:
 		# Create article
 		print("creating article \"" + article["title"] + "\"")
 		articlehtml = "" + article_template
-		articlehtml = articlehtml.replace("$css", blog_css)
 		articlehtml = articlehtml.replace("$title", article["title"])
 		articlehtml = articlehtml.replace("$date", article["date"])
 		articlehtml = articlehtml.replace("$banner", article["banner"])
@@ -114,7 +122,6 @@ def main():
 	# Blog archive
 	print("creating blog archive")
 	archive_template = readfile(config["templates"]["blog-archive"])
-	archive_template = archive_template.replace("$css", blog_css)
 	archive_template = archive_template.replace("$articles", listings)
 	archive_template = archive_template.replace("$copyright", config["copyright"])
 	file = os.path.join(out_path, "blog.html")

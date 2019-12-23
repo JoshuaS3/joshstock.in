@@ -21,13 +21,27 @@ code {
 	padding: 20px 0;
 }
 
+hr {
+	border-color: #eee;
+}
 
 .blog-center {
 	max-width: 800px;
-	padding: 20px;
-	margin: 60px auto;
-	font-size: 1.2em;
+	padding: 2em 40px;
+	margin: 0 auto;
+	min-height: 100vh;
+	box-sizing: border-box;
+	font-size: 1.15em;
 	line-height: 1.5;
+}
+.blog-center h1 {
+	margin-top:0;
+}
+.blog-top-1 {
+	margin-bottom:0;
+}
+.blog-top-2 {
+	margin-top:0;
 }
 .blog-banner {
 	width:100%;

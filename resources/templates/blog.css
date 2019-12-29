@@ -16,6 +16,7 @@ code {
 .gist .gist-file {
 	overflow: auto;
 	margin: 0;
+	margin-bottom: 1.5em;
 }
 .gist table {
 	table-layout: fixed;
@@ -29,22 +30,29 @@ hr {
 }
 
 .blog-center {
-	max-width: 800px;
+	max-width: 700px;
 	padding: 2em 40px;
 	margin: 0 auto;
-	min-height: 100vh;
-	box-sizing: border-box;
-	font-size: 1.15em;
+	font-size: 1em;
 	line-height: 1.5;
 }
 .blog-center h1 {
 	margin-top:0;
 }
-.blog-top-1 {
-	margin-bottom:0;
+.blog-center h2 {
+	margin-top:1em;
+	margin-bottom:0.25em;
 }
-.blog-top-2 {
+.blog-center h2 a {
+	color: #252525;
+	text-decoration: none;
+}
+.blog-center h2 a:hover {
+	text-decoration: underline;
+}
+.blog-center p, ul {
 	margin-top:0;
+	margin-bottom:1em;
 }
 .blog-banner {
 	width:100%;
@@ -53,6 +61,13 @@ hr {
 	background-position: center;
 	margin: 0;
 	user-select: none;
+}
+h1.blog-top-1 {
+	margin-top:1em;
+	margin-bottom:0;
+}
+p.blog-top-2 {
+	margin-top:0;
 }
 .blog-img-full {
 	max-width: 100%;

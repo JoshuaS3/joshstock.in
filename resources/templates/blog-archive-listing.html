@@ -1,6 +1,9 @@
 			<div class="blog-listing">
-				<img class="blog-banner" style="background-image: url($banner)"/>
-				<h2 class="blog-top-1">$title</h2>
-				<p class="blog-top-2"><code>$date</code>$summary</p>
-				<span><a href="$permalink">Read →</a></span>
+				<a href="$permalink"><div class="blog-banner" style="background-image: url($banner)"></div></a>
+				<div class="blog-listing-container">
+					<h2 class="blog-top-1"><a href="$permalink">$title</a></h2>
+					<p class="blog-top-2"><code>$date</code>$summary</p>
+					$sections
+					<span style="font-weight:bolder;"><a href="$permalink">Read >></a></span>
+				</div>
 			</div>

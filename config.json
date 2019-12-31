@@ -1,5 +1,5 @@
 {
-	"copyright": "<hr><p>Copyright (c) 2019 Joshua 'joshuas3' Stockin - <a href=\"/\">Home</a> - <a href=\"/blog\">Blog</a> - <a href=\"/privacy\">Privacy</a></p>",
+	"copyright": "<center style=\"margin-top:2em\"><p>© Copyright 2020 Joshua 'joshuas3' Stockin - <a href=\"/\">Home</a> - <a href=\"/blog\">Blog</a> - <a href=\"/privacy\">Privacy</a></p></center>",
 	"static": "resources/static",
 	"templates": {
 		"blog-archive": "resources/templates/blog-archive.html",
@@ -16,7 +16,8 @@
 			"title": "Creating My Website Stack",
 			"date": "NOV 16 2019",
 			"banner": "/static/landing.png",
-			"summary": "Creating a statically hosted website; writing a custom HTML template compiler in Python, configuring nginx and serving HTML pages and static files",
+			"summary": "Designing and creating a statically hosted website; writing a custom HTML compiler in Python; configuring nginx to serve HTML pages and static files; and automatically deploying into production.",
+			"sections": ["Design", "Creating Site Templates", "Writing the Compiler", "Serving Webpages", "Automatic Deployment into Production", "Publishing the Website"],
 			"content": "resources/articles/website-creation.html"
 		}
 	]

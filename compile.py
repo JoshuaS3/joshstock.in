@@ -4,6 +4,7 @@ import sys
 import os
 import shutil
 import json
+import re
 
 def readfile(filename):
 	try:
@@ -43,10 +44,10 @@ def empty_dir(path):
 routemaps = {}
 sitemap = """<?xml version="1.0" encoding="UTF-8"?>
 <urlset
-      xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"
-      xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-      xsi:schemaLocation="http://www.sitemaps.org/schemas/sitemap/0.9
-            http://www.sitemaps.org/schemas/sitemap/0.9/sitemap.xsd">"""
+	  xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"
+	  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	  xsi:schemaLocation="http://www.sitemaps.org/schemas/sitemap/0.9
+		http://www.sitemaps.org/schemas/sitemap/0.9/sitemap.xsd">"""
 def routemap(route, priority=0.5):
 	routemaps[route] = True
 	global sitemap
@@ -97,18 +98,8 @@ def main():
 	for article in config["articles"]:
 		# Create article
 		print("creating article \"" + article["title"] + "\"")
-		articlehtml = "" + article_template
-		articlehtml = articlehtml.replace("$title", article["title"])
-		articlehtml = articlehtml.replace("$date", article["date"])
-		articlehtml = articlehtml.replace("$banner", article["banner"])
-		articlehtml = articlehtml.replace("$content", readfile(article["content"]))
-		articlehtml = articlehtml.replace("$summary", article["summary"])
-		articlehtml = articlehtml.replace("$copyright", config["copyright"])
-		file = os.path.join(out_path, "blog-"+article["title"].lower().replace(" ", "-")+".html")
-		path = "/blog/"+article["title"].lower().replace(" ", "-")
-		articlehtml = articlehtml.replace("$permalink", path)
-		writefile(file, articlehtml)
-		routemap(path, 0.7)
+		titleFixed = re.sub("[^A-Za-z0-9]", "-", article["title"].lower())
+		path = "/blog/"+titleFixed
 
 		# Update archive listings
 		listinghtml = "" + article_listing_template
@@ -116,8 +107,30 @@ def main():
 		listinghtml = listinghtml.replace("$date", article["date"])
 		listinghtml = listinghtml.replace("$banner", article["banner"])
 		listinghtml = listinghtml.replace("$summary", article["summary"])
+		sections = ""
+		if "sections" in article:
+			sections = "<ol style=\"list-style-type:auto; padding-left:20px\"><b>Contents</b>"
+			for section in article["sections"]:
+				sectionTag = re.sub("[^A-Za-z0-9]", "-", section).lower()
+				sections += "<li><a href=\"" + path + "#" + sectionTag + "\">" + section + "</a></li>"
+			sections += "</ol>"
+		listinghtml = listinghtml.replace("$sections", sections)
 		listinghtml = listinghtml.replace("$permalink", path)
 		listings = listinghtml + listings
+
+		articlehtml = "" + article_template
+		articlehtml = articlehtml.replace("$title", article["title"])
+		articlehtml = articlehtml.replace("$date", article["date"])
+		articlehtml = articlehtml.replace("$banner", article["banner"])
+		articlehtml = articlehtml.replace("$content", readfile(article["content"]))
+		articlehtml = articlehtml.replace("$summary", article["summary"])
+		articlehtml = articlehtml.replace("$sections", sections)
+		articlehtml = articlehtml.replace("$copyright", config["copyright"])
+		file = os.path.join(out_path, "blog-"+titleFixed+".html")
+		articlehtml = articlehtml.replace("$permalink", path)
+		writefile(file, articlehtml)
+		routemap(path, 0.7)
+
 
 	# Blog archive
 	print("creating blog archive")

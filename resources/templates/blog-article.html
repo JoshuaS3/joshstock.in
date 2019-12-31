@@ -10,15 +10,17 @@
 		<meta property="og:description" content="$summary" />
 		<meta property="og:type" content="website" />
 		<meta property="og:image" content="$banner" />
+		<meta property="og:image:width" content="750" />
+		<meta property="og:image:height" content="250" />
 		<meta property="og:url" content="https://joshstock.in$permalink" />
 		<link rel="stylesheet" href="/blog.css">
-		<meta name="viewport" content="width=device-width, initial-scale=1">
+		<meta name="viewport" content="width=device-width, initial-scale=1.0">
 	</head>
 	<body>
 		<div class="blog-center">
-			<span><a href="/blog">← Back to archive</a></span>
+			<span><a href="/blog"><< Back to archive</a></span>
 			<h1>Josh Stockin</h1>
-			<img class="blog-banner" style="background-image: url($banner)"/>
+			<div class="blog-banner" style="background-image: url($banner)"></div>
 			<h1 class="blog-top-1">$title</h1>
 			<p class="blog-top-2"><code>$date</code></p>
 			$content
@@ -46,7 +48,7 @@
 				let header = headers[i];
 				console.log(header);
 				let inner = header.innerHTML;
-				let id = inner.replace(/[^a-z0-9]/gi,"-");
+				let id = inner.replace(/[^a-z0-9]/gi,"-").toLowerCase();
 				header.id = id;
 				header.innerHTML = "<a href=\"#" + id + "\">" + inner + "</a>";
 			}

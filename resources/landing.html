@@ -11,7 +11,6 @@
 		<meta property="og:type" content="website" />
 		<meta property="og:image" content="/favicon.ico" />
 		<meta property="og:url" content="https://joshstock.in" />
-		<script src="https://unpkg.com/feather-icons"></script>
 		<style>
 			@import url('https://fonts.googleapis.com/css?family=Fira+Sans:400,400i,500&display=swap');
 			html{
@@ -45,6 +44,7 @@
 				font-size: 1.5em;
 				display: inline;
 				padding: 0 0.5em;
+				filter: invert(1);
 			}
 			@media (max-width: 800px) {
 				body {
@@ -62,14 +62,11 @@
 		</div>
 		<div style="position: absolute; bottom: 40px;">
 			<ul>
-				<li title="Email"><a href="mailto:joshstockin@gmail.com"><i data-feather="mail"></i></a></li>
-				<li title="GitHub"><a href="https://github.com/joshuas3"><i data-feather="github"></i></a></li>
-				<li title="Twitter"><a href="https://www.twitter.com/joshstockin"><i data-feather="twitter"></i></a></li>
-				<li title="Blog"><a href="/blog"><i data-feather="file-text"></i></a></li>
+				<li title="Email"><a href="mailto:joshstockin@gmail.com"><img src="/static/email.svg"/></a></li>
+				<li title="GitHub"><a href="https://github.com/joshuas3"><img src="/static/github.svg"/></a></li>
+				<li title="Twitter"><a href="https://www.twitter.com/joshstockin"><img src="/static/twitter.svg"/></a></li>
+				<li title="Blog"><a href="/blog"><img src="/static/file.svg"/></a></li>
 			</ul>
 		</div>
-		<script>
-			feather.replace()
-		</script>
 	</body>
 </html>

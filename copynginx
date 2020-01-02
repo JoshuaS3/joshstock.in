@@ -1,5 +1,7 @@
 #!/usr/bin/env bash
 
+SCRIPTPATH=$(dirname $(realpath -s $0))
+
 usage() {
 	echo "usage: sudo ./copynginx [prod | test]"
 	exit 1
@@ -16,13 +18,13 @@ if [ "$1" != "prod" ] && [ "$1" != "test" ]; then
 fi
 
 echo -e "copying nginx.conf"
-cp -v nginx/nginx.conf /etc/nginx/nginx.conf
+cp -v $SCRIPTPATH/nginx/nginx.conf /etc/nginx/nginx.conf
 echo -e "\nclearing /etc/nginx/joshstock.in/"
 rm -rv /etc/nginx/joshstock.in/
 echo -e "\ncreate new /etc/nginx/joshstock.in/"
 mkdir -pv /etc/nginx/joshstock.in/
 echo -e "\ncopying $1 configuration"
-cp -rv nginx/$1/* /etc/nginx/joshstock.in/
+cp -rv $SCRIPTPATH/nginx/$1/* /etc/nginx/joshstock.in/
 echo -e "\nattempting to reload nginx"
 service nginx reload
 echo -e "\ndone"

@@ -15,41 +15,42 @@
 		<meta name="viewport" content="width=device-width, initial-scale=1.0">
 	</head>
 	<body>
-		<div class="blog-center">
-			<span><a href="/blog"><< Back to archive</a></span>
-			<h1>Josh Stockin</h1>
-			<div class="blog-banner" style="background-image: url($banner)"></div>
-			<h1 class="blog-top-1">$title</h1>
-			<p class="blog-top-2"><code>$date</code></p>
-			$content
-			<p><a href="$permalink">Article Permalink</a></p>
-			<script>
-				let blog_center = document.getElementsByClassName("blog-center")[0];
-				let headers = blog_center.getElementsByTagName("h2");
-				for (let i = 0; i < headers.length; i++) {
-					let header = headers[i];
-					console.log(header);
-					let inner = header.innerHTML;
-					let id = inner.replace(/[^a-z0-9]/gi,"-").toLowerCase();
-					header.id = id;
-					header.innerHTML = "<a href=\"#" + id + "\">" + inner + "</a>";
-				}
-			</script>
-			<div id="disqus_thread"></div>
-			<script>
-			var disqus_config = function () {
-				this.page.url = "https://joshstock.in$permalink";
-				this.page.identifier = "https://joshstock.in$permalink";
-			};
-			(function() {
-			var d = document, s = d.createElement('script');
-			s.src = 'https://joshstockin.disqus.com/embed.js';
-			s.setAttribute('data-timestamp', +new Date());
-			(d.head || d.body).appendChild(s);
-			})();
-			</script>
-			<noscript><p>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</p></a></noscript>
-			$copyright
+		<div class="blog-banner" style="background-image: url($banner);"></div>
+		<div class="blog-page">
+			<div class="blog-center">
+				<span><a href="/blog"><< Back to archive</a></span>
+				<h1 class="blog-top-1" style="margin-top:0">$title</h1>
+				<p class="blog-top-2"><code>$date</code></p>
+				$content
+				<p><a href="$permalink">Article Permalink</a></p>
+				<script>
+					let blog_center = document.getElementsByClassName("blog-center")[0];
+					let headers = blog_center.getElementsByTagName("h2");
+					for (let i = 0; i < headers.length; i++) {
+						let header = headers[i];
+						console.log(header);
+						let inner = header.innerHTML;
+						let id = inner.replace(/[^a-z0-9]/gi,"-").toLowerCase();
+						header.id = id;
+						header.innerHTML = "<a href=\"#" + id + "\">" + inner + "</a>";
+					}
+				</script>
+				<div id="disqus_thread"></div>
+				<script>
+				var disqus_config = function () {
+					this.page.url = "https://joshstock.in$permalink";
+					this.page.identifier = "https://joshstock.in$permalink";
+				};
+				(function() {
+				var d = document, s = d.createElement('script');
+				s.src = 'https://joshstockin.disqus.com/embed.js';
+				s.setAttribute('data-timestamp', +new Date());
+				(d.head || d.body).appendChild(s);
+				})();
+				</script>
+				<noscript><p>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</p></a></noscript>
+				$copyright
+			</div>
 		</div>
 	</body>
 </html>

@@ -155,9 +155,9 @@ def main():
 
 if __name__ == "__main__":
 	if len(sys.argv) < 2:
-		print("usage: compile.py <folder>")
-		exit(1)
-	folder_out = sys.argv[1]
+		folder_out = "/var/www/html"
+	else:
+		folder_out = sys.argv[1]
 	print("compile.py starting")
 	print("changing active directory to script location")
 	os.chdir(sys.path[0])

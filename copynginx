@@ -1,0 +1,28 @@
+#!/usr/bin/env bash
+
+usage() {
+	echo "usage: sudo ./copynginx [prod | test]"
+	exit 1
+}
+if [ "$EUID" -ne 0 ]; then
+	echo "error: must run as root"
+	usage
+fi
+if [ $# -eq 0 ]; then
+	usage
+fi
+if [ "$1" != "prod" ] && [ "$1" != "test" ]; then
+	usage
+fi
+
+echo -e "copying nginx.conf"
+cp -v nginx/nginx.conf /etc/nginx/nginx.conf
+echo -e "\nclearing /etc/nginx/joshstock.in/"
+rm -rv /etc/nginx/joshstock.in/
+echo -e "\ncreate new /etc/nginx/joshstock.in/"
+mkdir -pv /etc/nginx/joshstock.in/
+echo -e "\ncopying $1 configuration"
+cp -rv nginx/$1/* /etc/nginx/joshstock.in/
+echo -e "\nattempting to reload nginx"
+service nginx reload
+echo -e "\ndone"

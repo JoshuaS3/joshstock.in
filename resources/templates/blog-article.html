@@ -14,7 +14,7 @@
 		<link rel="stylesheet" href="/blog.css">
 		<meta name="viewport" content="width=device-width, initial-scale=1.0">
 	</head>
-	<body>
+	<body onscroll="scroll();">
 		<div class="blog-banner" style="background-image: url($banner);"></div>
 		<div class="blog-page">
 			<div class="blog-center">
@@ -28,12 +28,16 @@
 					let headers = blog_center.getElementsByTagName("h2");
 					for (let i = 0; i < headers.length; i++) {
 						let header = headers[i];
-						console.log(header);
 						let inner = header.innerHTML;
 						let id = inner.replace(/[^a-z0-9]/gi,"-").toLowerCase();
 						header.id = id;
 						header.innerHTML = "<a href=\"#" + id + "\">" + inner + "</a>";
-					}
+					};
+					let blog_banner = document.getElementsByClassName("blog-banner")[0];
+					function scroll() {
+						blog_banner.style["background-position"] = "50% " + (50 - (window.scrollY/20)).toString() + "%";
+					};
+					scroll();
 				</script>
 				<div id="disqus_thread"></div>
 				<script>

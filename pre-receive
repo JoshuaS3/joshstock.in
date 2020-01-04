@@ -3,20 +3,14 @@
 # .git/hooks/pre-receive
 
 SCRIPTPATH=$(dirname $(realpath -s $0))
-BRANCH="master"
 
 while read oldrev newrev ref
 do
-	if [ "$ref" = "refs/heads/$BRANCH" ];
-	then
-		echo "Ref $ref received. Deploying ${BRANCH} branch to production..."
-		if [ ! git diff --name-only $1..$2 | grep 'post-receive' ]; then
-			echo "Updated post-receive hook detected. Installing..."
-			git archive $newrev | tar -x -C /tmp/newrev
-			cp /tmp/newrev/post-receive $SCRIPTPATH/post-receive
-			rm -rf /tmp/newrev
-		fi
-	else
-		echo "Ref $ref received. Doing nothing: only the ${BRANCH} branch may be deployed on this server."
+	echo "Ref $ref received. Checking for post-receive hook modification..."
+	if [ ! git diff --name-only $1..$2 | grep 'post-receive' ]; then
+		echo "Updated post-receive hook detected. Installing..."
+		git archive $newrev | tar -x -C /tmp/newrev
+		cp /tmp/newrev/post-receive $SCRIPTPATH/post-receive
+		rm -rf /tmp/newrev
 	fi
 done

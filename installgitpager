@@ -23,22 +23,40 @@ elif [ "$1" == "test" ]; then
 	NODE_ENV="development"
 fi
 
+if [ ! -f $SCRIPTPATH/gitpager.service ]; then
+	echo "error: $SCRIPTPATH/gitpager.service is nonexistent"
+	exit 1
+fi
 echo "copying service file to systemd configuration folder"
 cp $SCRIPTPATH/gitpager.service /etc/systemd/system/gitpager.service
 
 echo "modifying service configuration file for node environment variable"
 sed -i "s/\$env/$NODE_ENV/g" /etc/systemd/system/gitpager.service
 
-echo "emptying and deleting old $GITPAGERPATH folder"
-rm -r $GITPAGERPATH
+if [ -d $GITPAGERPATH/node_modules/ ]; then
+	echo "preserving node_modules/ from old $GITPAGERPATH folder"
+	mv -v $GITPAGERPATH/node_modules/ /tmp/gitpager_node_modules/
+fi
 
-echo "creating new $GITPAGERPATH folder"
-mkdir -p $GITPAGERPATH
+if [ -d $GITPAGERPATH ]; then
+	echo "emptying old $GITPAGERPATH folder"
+	rm -r $GITPAGERPATH/*
+else
+	echo "creating new $GITPAGERPATH folder"
+	mkdir -pv $GITPAGERPATH
+fi
 
+if [ ! -d $SCRIPTPATH/gitpager ]; then
+	echo "error: $SCRIPTPATH/gitpager is nonexistent"
+	exit 1
+fi
 echo "copying $SCRIPTPATH/gitpager/* to $GITPAGERPATH"
 cp -r $SCRIPTPATH/gitpager/* $GITPAGERPATH
 
 echo "installing node modules at $GITPAGERPATH"
+if [ -d /tmp/gitpager_node_modules/ ]; then
+	mv -v /tmp/gitpager_node_modules/ $GITPAGERPATH/node_modules/
+fi
 npm --prefix $GITPAGERPATH install $GITPAGERPATH
 
 echo "attempting to reload gitpager service"

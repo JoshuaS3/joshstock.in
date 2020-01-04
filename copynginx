@@ -17,15 +17,25 @@ if [ "$1" != "prod" ] && [ "$1" != "test" ]; then
 	usage
 fi
 
+if [ ! -f $SCRIPTPATH/nginx/nginx.conf ]; then
+	echo "error: $SCRIPTPATH/nginx/nginx.conf is nonexistent"
+	exit 1
+fi
 echo -e "copying nginx.conf"
 cp -v $SCRIPTPATH/nginx/nginx.conf /etc/nginx/nginx.conf
 
-echo -e "clearing /etc/nginx/joshstock.in/"
-rm -rv /etc/nginx/joshstock.in/
+if [ -d /etc/nginx/joshstock.in/ ]; then
+	echo -e "clearing /etc/nginx/joshstock.in/"
+	rm -rv /etc/nginx/joshstock.in/*
+else
+	echo -e "create new /etc/nginx/joshstock.in/"
+	mkdir -pv /etc/nginx/joshstock.in/
+fi
 
-echo -e "create new /etc/nginx/joshstock.in/"
-mkdir -pv /etc/nginx/joshstock.in/
-
+if [ ! -d $SCRIPTPATH/nginx/$1 ]; then
+	echo -e "error: $SCRIPTPATH/nginx/$1 is nonexistent"
+	exit 1
+fi
 echo -e "copying $1 configuration"
 cp -rv $SCRIPTPATH/nginx/$1/* /etc/nginx/joshstock.in/
 

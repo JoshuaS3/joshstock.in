@@ -1,0 +1,48 @@
+#!/usr/bin/env bash
+
+GITPAGERPATH=/srv/gitpager
+SCRIPTPATH=$(dirname $(realpath -s $0))
+
+usage() {
+	echo "usage: sudo ./installgitpager [prod | test]"
+	exit 1
+}
+if [ "$EUID" -ne 0 ]; then
+	echo "error: must run as root"
+	usage
+fi
+if [ $# -eq 0 ]; then
+	usage
+fi
+if [ "$1" != "prod" ] && [ "$1" != "test" ]; then
+	usage
+fi
+if [ "$1" == "prod" ]; then
+	NODE_ENV="production"
+elif [ "$1" == "test" ]; then
+	NODE_ENV="development"
+fi
+
+echo "copying service file to systemd configuration folder"
+cp $SCRIPTPATH/gitpager.service /etc/systemd/system/gitpager.service
+
+echo "modifying service configuration file for node environment variable"
+sed -i "s/\$env/$NODE_ENV/g" /etc/systemd/system/gitpager.service
+
+echo "emptying and deleting old $GITPAGERPATH folder"
+rm -r $GITPAGERPATH
+
+echo "creating new $GITPAGERPATH folder"
+mkdir -p $GITPAGERPATH
+
+echo "copying $SCRIPTPATH/gitpager/* to $GITPAGERPATH"
+cp -r $SCRIPTPATH/gitpager/* $GITPAGERPATH
+
+echo "installing node modules at $GITPAGERPATH"
+npm --prefix $GITPAGERPATH install $GITPAGERPATH
+
+echo "attempting to reload gitpager service"
+systemctl daemon-reload
+service gitpager restart
+
+echo "done"

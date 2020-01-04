@@ -1,0 +1,4 @@
+{
+	"count_commits": "git --git-dir $REPOSITORY/.git rev-list --count $BRANCH",
+	"list_commits": "git --git-dir $REPOSITORY/.git log --pretty=format:'%aI ## %H ## %an ## %ae ## %s' -n $COUNT --skip=$SKIP"
+}

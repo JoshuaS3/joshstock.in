@@ -1,0 +1,11 @@
+[Unit]
+Description=git subdomain of joshstock.in
+
+[Service]
+Type=simple
+ExecStart=/usr/bin/node /srv/gitpager/index.js
+Restart=always
+Environment=NODE_ENV=$env
+
+[Install]
+WantedBy=multi-user.target

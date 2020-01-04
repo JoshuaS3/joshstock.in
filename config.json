@@ -15,7 +15,7 @@
 		{
 			"title": "Creating My Website Stack",
 			"date": "NOV 16 2019",
-			"banner": "/static/landing.png",
+			"banner": "/static/site-compile.png",
 			"summary": "Designing and creating a statically hosted website; writing a custom HTML compiler in Python; configuring nginx to serve HTML pages and static files; and automatically deploying into production.",
 			"sections": ["Design", "Creating Site Templates", "Writing the Compiler", "Serving Webpages", "Automatic Deployment into Production", "Publishing the Website"],
 			"content": "resources/articles/website-creation.html"

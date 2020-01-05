@@ -19,7 +19,7 @@ function get_commit(repository, branch="HEAD", body=true) {
 	let properties;
 	try {
 		properties = exec(call).split(" ## ");
-	} catch {
+	} catch (e) {
 		return null;
 	}
 	commit = {};

@@ -14,9 +14,14 @@ function count_commits(repository, branch="HEAD") {
 }
 
 const get_commit_command = "git --git-dir $REPOSITORY log $BRANCH --pretty=format:'%aI ## %H ## %an ## %ae ## %s ## %b' -n 1 --";
-function get_commit(repository, branch="HEAD") {
+function get_commit(repository, branch="HEAD", body=true) {
 	call = get_commit_command.replace("$REPOSITORY", repository).replace("$BRANCH", branch);
-	properties = exec(call).split(" ## ");
+	let properties;
+	try {
+		properties = exec(call).split(" ## ");
+	} catch {
+		return null;
+	}
 	commit = {};
 	commit.number = count_commits(repository, properties[1]);
 	commit.date = properties[0];
@@ -24,16 +29,17 @@ function get_commit(repository, branch="HEAD") {
 	commit.author = properties[2];
 	commit.author_email = properties[3];
 	commit.subject = properties[4];
-	commit.body = properties[5].trim();
+	if (body) commit.body = properties[5].trim();
 	return commit;
 }
 
 const list_commits_command = `git --git-dir $REPOSITORY log $BRANCH --pretty=format:'%aI ## %H ## %an ## %ae ## %s' -n ${skip_count} --skip=$SKIP --`;
 function list_commits(repository, branch="HEAD", skip=0) {
 	call = list_commits_command.replace("$REPOSITORY", repository).replace("$BRANCH", branch).replace("$SKIP", skip*skip_count);
+	output = exec(call);
+	if (output == '') return null;
+	lines = output.split("\n");
 	commits = [];
-	lines = exec(call).split("\n");
-	if (lines == ['']) return commits;
 	for (let i = 0; i < lines.length; i++) {
 		properties = lines[i].split(" ## ");
 		commit = {};

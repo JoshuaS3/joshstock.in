@@ -42,7 +42,7 @@ indexFile = fs.readFileSync(path.resolve(__dirname, "index.html")).toString();
 app.get("/", function(req, res) {
 	response = indexFile;
 	for (repo in allowed_repos) {
-		response = response.replace("$commit_" + repo, format_commit(repo, gitcontrol.get_commit(`${repo_path(repo)}`, "@{0}"), false, true));
+		response = response.replace("$commit_" + repo, format_commit(repo, gitcontrol.get_commit(`${repo_path(repo)}`, "HEAD"), false, true));
 	}
 	res.send(response);
 });

@@ -7,13 +7,13 @@ function exec(commandstring) {
 
 const skip_count = 20;
 
-const count_commits_command = "git --git-dir $REPOSITORY/.git rev-list --count $BRANCH";
+const count_commits_command = "git --git-dir $REPOSITORY rev-list --count $BRANCH";
 function count_commits(repository, branch="HEAD") {
 	call = count_commits_command.replace("$REPOSITORY", repository).replace("$BRANCH", branch);
 	return exec(call).trim();
 }
 
-const get_commit_command = "git --git-dir $REPOSITORY/.git log $BRANCH --pretty=format:'%aI ## %H ## %an ## %ae ## %s ## %b' -n 1 --";
+const get_commit_command = "git --git-dir $REPOSITORY log $BRANCH --pretty=format:'%aI ## %H ## %an ## %ae ## %s ## %b' -n 1 --";
 function get_commit(repository, branch="HEAD") {
 	call = get_commit_command.replace("$REPOSITORY", repository).replace("$BRANCH", branch);
 	properties = exec(call).split(" ## ");
@@ -28,7 +28,7 @@ function get_commit(repository, branch="HEAD") {
 	return commit;
 }
 
-const list_commits_command = `git --git-dir $REPOSITORY/.git log $BRANCH --pretty=format:'%aI ## %H ## %an ## %ae ## %s' -n ${skip_count} --skip=$SKIP --`;
+const list_commits_command = `git --git-dir $REPOSITORY log $BRANCH --pretty=format:'%aI ## %H ## %an ## %ae ## %s' -n ${skip_count} --skip=$SKIP --`;
 function list_commits(repository, branch="HEAD", skip=0) {
 	call = list_commits_command.replace("$REPOSITORY", repository).replace("$BRANCH", branch).replace("$SKIP", skip*skip_count);
 	commits = [];

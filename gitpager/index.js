@@ -9,9 +9,9 @@ const allowed_repos = {"lognestmonster": "dev", "joshstock.in": "master", "auto-
 
 function repo_path(repo) {
 	if (process.env.NODE_ENV == "production") {
-		return "/home/git/" + repo + ".git";
+		return "/home/git/" + repo + ".git/";
 	} else {
-		return "/home/josh/Desktop/" + repo;
+		return "/home/josh/Desktop/" + repo + "/.git";
 	}
 }
 

@@ -20,6 +20,7 @@ center {
 	max-width: 700px;
 	padding: 2em;
 	margin: 0 auto;
+	margin-bottom: 4em;
 }
 #container>h2 {
 	margin-bottom: 0;
@@ -35,40 +36,40 @@ ul {
 .repository:last-of-type {
 	border: none;
 }
-.more {
-	text-align: center;
-	display: block;
-}
 .commit {
 	padding: 1em;
 	margin-bottom: 1em;
 	border-radius: 0.5em;
 	border: 1px solid #757575;
+	display: block;
 }
 .commit:hover {
 	border: 1px solid #959595;
 	cursor: pointer;
 }
-.commit>.hash {
+.commit .hash {
 	font-family: 'Fira Sans', monospace;
 	font-size: 0.8em;
 }
-.commit>.subject {
-	margin: 0;
-}
-.commit>.author {
-	margin: 0;
-}
-.commit>.author>.email {
+.commit .hash>i {
 	margin-left: 10px;
 }
-.commit>.author>.email:before{
+.commit .subject {
+	margin: 0;
+}
+.commit .author {
+	margin: 0;
+}
+.commit .author>.email {
+	margin-left: 10px;
+}
+.commit .author>.email:before{
 	content: "<"
 }
-.commit>.author>.email:after{
+.commit .author>.email:after{
 	content: ">"
 }
-.commit>.message {
+.commit .message {
 	font-family: 'Fira Mono', monospace;
 	font-size: 0.8em;
 	margin-bottom: 0;

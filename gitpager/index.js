@@ -6,7 +6,14 @@ const port = 8080;
 const gitcontrol = require(path.resolve(__dirname, "gitcontrol"))
 
 const allowed_repos = {"lognestmonster": "dev", "joshstock.in": "master", "auto-plow": "dev"};
-const repo_folder = process.env.NODE_ENV == "production" ? "/home/git/" : "/home/josh/Desktop/";
+
+function repo_path(repo) {
+	if (process.env.NODE_ENV == "production") {
+		return "/home/git/" + repo + ".git";
+	} else {
+		return "/home/josh/Desktop/" + repo;
+	}
+}
 
 commitFile = fs.readFileSync(path.resolve(__dirname, "commit.html")).toString();
 function format_commit(repo, commit, isgithub=false, islatest=false) {
@@ -35,7 +42,7 @@ indexFile = fs.readFileSync(path.resolve(__dirname, "index.html")).toString();
 app.get("/", function(req, res) {
 	response = indexFile;
 	for (repo in allowed_repos) {
-		response = response.replace("$commit_" + repo, format_commit(repo, gitcontrol.get_commit(`${repo_folder}${repo}`, "@{0}"), false, true));
+		response = response.replace("$commit_" + repo, format_commit(repo, gitcontrol.get_commit(`${repo_path(repo)}`, "@{0}"), false, true));
 	}
 	res.send(response);
 });
@@ -46,7 +53,7 @@ app.get("/:repo/:page(\\d+)", function(req, res) {
 		return;
 	}
 	req.params.page = parseInt(req.params.page) || 1;
-	res.send(gitcontrol.list_commits(`${repo_folder}${req.params.repo}`, allowed_repos[req.params.repo], req.params.page-1));
+	res.send(gitcontrol.list_commits(`${repo_path(req.params.repo)}`, allowed_repos[req.params.repo], req.params.page-1));
 });
 
 app.get("/:repo/:commit([a-f0-9]{40})", function(req, res) {
@@ -54,7 +61,7 @@ app.get("/:repo/:commit([a-f0-9]{40})", function(req, res) {
 		res.status(404).send()
 		return;
 	}
-	res.send(gitcontrol.get_commit(`${repo_folder}${req.params.repo}`, req.params.commit));
+	res.send(gitcontrol.get_commit(`${repo_path(req.params.repo)}`, req.params.commit));
 });
 
 app.listen(port);

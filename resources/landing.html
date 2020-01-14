@@ -20,13 +20,21 @@
 				height: 100vh;
 			    font-family: 'Fira Sans', sans-serif;
 			    letter-spacing: -1px;
-				color: #fff;
+				color: #eee;
+				text-shadow: 2px 2px 8px #000;
 			}
 			body{
 				display: flex;
 				align-items: center;
 				justify-content: center;
-				background-color: #497fc6;
+				/*background-color: #497fc6;*/
+				background:
+					linear-gradient(
+						rgba(0, 0, 0, 0.7),
+						rgba(0, 0, 0, 0.7)
+					), 
+					url(/static/esp32.jpg) no-repeat center center fixed;
+				background-size: cover;
 			}
 			div {
 				display: inline-block;
@@ -34,7 +42,7 @@
 				text-align: center;
 			}
 			a {
-				color: #fff;
+				color: #eee;
 				text-decoration: none;
 			}
 			a:hover {
@@ -47,8 +55,7 @@
 			li {
 				font-size: 1.5em;
 				display: inline;
-				padding: 0 0.5em;
-				filter: invert(1);
+				padding: 0 0.8em;
 			}
 			@media (max-width: 800px) {
 				body {
@@ -64,12 +71,12 @@
 			<p style="font-size: 2.5em; margin: 10px">A 16-year-old aspiring software engineer</p>
 			<p style="font-size: 1.75em; margin: 10px; font-style: italic;"><a href="mailto:joshstockin@gmail.com">joshstockin@gmail.com</a></p>
 		</div>
-		<div style="position: absolute; bottom: 40px;">
+		<div style="position: absolute; bottom: 2em;">
 			<ul>
-				<li title="Email"><a href="mailto:joshstockin@gmail.com"><img src="/static/email.svg"/></a></li>
-				<li title="GitHub"><a href="https://github.com/joshuas3"><img src="/static/github.svg"/></a></li>
-				<li title="Twitter"><a href="https://www.twitter.com/joshstockin"><img src="/static/twitter.svg"/></a></li>
-				<li title="Blog"><a href="/blog"><img src="/static/file.svg"/></a></li>
+				<li><a href="mailto:joshstockin@gmail.com">Email</a></li>
+				<li><a href="https://www.twitter.com/joshstockin">Twitter</a></li>
+				<li><a href="https://git.joshstock.in">Git Commits</a></li>
+				<li><a href="/blog">Blog</a></li>
 			</ul>
 		</div>
 	</body>

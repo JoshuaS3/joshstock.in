@@ -72,7 +72,7 @@ app.get("/:repo/:page(\\d+)?", function(req, res) {
 			dateString = new Date(commits[commit].date).toLocaleDateString("en-US", {month:"long",day:"numeric",year:"numeric"});
 			if (dateString != lastDate) {
 				lastDate = dateString;
-				commitsFormatted += "<h2 style=\"margin-bottom:4px\">" + dateString + "</h2>";
+				commitsFormatted += "<h2 class=\"date category\">" + dateString + "</h2>";
 			}
 			commitsFormatted += format_commit(req.params.repo, commits[commit], false, commits[commit].number == total);
 		}

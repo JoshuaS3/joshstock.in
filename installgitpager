@@ -23,12 +23,12 @@ elif [ "$1" == "test" ]; then
 	NODE_ENV="development"
 fi
 
-if [ ! -f $SCRIPTPATH/gitpager.service ]; then
-	echo "error: $SCRIPTPATH/gitpager.service is nonexistent"
+if [ ! -f $SCRIPTPATH/gitpager/misc/gitpager.service ]; then
+	echo "error: $SCRIPTPATH/gitpager/misc/gitpager.service is nonexistent"
 	exit 1
 fi
 echo "copying service file to systemd configuration folder"
-cp $SCRIPTPATH/gitpager.service /etc/systemd/system/gitpager.service
+cp $SCRIPTPATH/gitpager/misc/gitpager.service /etc/systemd/system/gitpager.service
 
 echo "modifying service configuration file for node environment variable"
 sed -i "s/\$env/$NODE_ENV/g" /etc/systemd/system/gitpager.service

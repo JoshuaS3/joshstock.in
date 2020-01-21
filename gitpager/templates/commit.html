@@ -20,7 +20,12 @@
 			<a href="/$repo"><< Back to repo</a>
 		</center>
 		<div id="container">
-			$commit
+			<div class="commit">
+				<span class="hash">$shorthash<i class="date">$date</i></span>
+				<h3 class="subject">$subject</h3>
+				<p class="author"><span>$author</span><i class="email">$author_email</i></p>
+				$body
+			</div>
 		</div>
 	</body>
 </html>

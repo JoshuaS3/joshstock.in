@@ -1,0 +1,46 @@
+---
+
+server-port: 8080
+static:
+  /style.css:
+    path: static/style.css
+    type: text/css
+templates:
+  - name: index
+    path: templates/index.html
+  - name: commit
+    path: templates/commit.html
+  - name: inline_commit
+    path: templates/inline_commit.html
+  - name: repository
+    path: templates/repository.html
+  - name: inline_repository
+    path: templates/inline_repository.html
+repositories:
+  - name: lognestmonster
+    description: "a single-header C logging library and parser for event-based logs"
+    branch: dev
+    allows:
+      - master
+      - dev
+    github: "https://github.com/JoshuaS3/lognestmonster"
+    location:
+      dev: "/home/josh/Desktop/lognestmonster/.git"
+      prod: "/home/git/lognestmonster.git"
+  - name: auto-plow
+    description: "a remote control snow plow controlled by an ESP32, propelled by electric wheelchair motors, and powered by 24v batteries"
+    branch: dev
+    allows:
+      - master
+      - dev
+    github: "https://github.com/JoshuaS3/auto-plow"
+    location:
+      dev: "/home/josh/Desktop/auto-plow/.git"
+      prod: "/home/git/auto-plow.git"
+  - name: joshstock.in
+    description: "my personal website, blog, portfolio"
+    branch: master
+    github: "https://github.com/JoshuaS3/joshstock.in"
+    location:
+      dev: "/home/josh/Desktop/joshstock.in/.git"
+      prod: "/home/git/joshstock.in.git"

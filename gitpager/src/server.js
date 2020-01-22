@@ -23,8 +23,26 @@ const listenerFunction = function(request, response) {
 	if (request.url.match('^\/.*\/[0-9]*$')) { // /reponame/pagenumber
 		repositoryName = request.url.split('/')[1];
 		if (repositoryName in config.repositories) {
-			pageNumber = request.url.split('/')[2];
-			page = pages.repository(repositoryName, pageNumber);
+			pageNumber = parseInt(request.url.split('/')[2]);
+			if (pageNumber > 0) {
+				page = pages.repository(repositoryName, pageNumber);
+				if (page) {
+					response.setHeader('Content-Type', 'text/html');
+					response.writeHead(200);
+					response.write(page);
+				} else {
+					response.writeHead(404);
+				}
+				response.end();
+				return;
+			}
+		}
+	}
+	if (request.url.match('^\/.*\/[0-9a-f]{40}$')) {
+		repositoryName = request.url.split('/')[1];
+		if (repositoryName in config.repositories) {
+			hash = request.url.split('/')[2];
+			page = pages.commit(repositoryName, hash);
 			if (page) {
 				response.setHeader('Content-Type', 'text/html');
 				response.writeHead(200);

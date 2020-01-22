@@ -5,11 +5,21 @@ function execute(repository, command) {
 }
 
 function getCommitNumber(repository, hash) {
-	return parseInt(execute(repository, `rev-list --count ${hash}`).trim());
+	return parseInt(execute(repository, `rev-list --count ${hash} --`).trim());
+}
+
+function getCommitDiff(repository, hash) {
+	let diff = execute(repository, `show --pretty="" --numstat ${hash} --`).trim().split('\n');
+	return diff;
 }
 
 function getLatestCommit(repository, branch) {
-	let commit_raw = execute(repository, `log ${branch || "HEAD"} --pretty=format:'%aI ## %H ## %an ## %ae ## %s ## %b' -n 1 --`).split(' ## ');
+	let commit_raw;
+	try {
+		commit_raw = execute(repository, `log ${branch || 'HEAD'} --pretty=format:'%aI ## %H ## %an ## %ae ## %s ## %b' -n 1 --`).split(' ## ');
+	} catch {
+		return null;
+	}
 	let commit = {};
 	commit.date = commit_raw[0];
 	commit.hash = commit_raw[1];
@@ -41,6 +51,7 @@ function listCommits(repository, branch, page) {
 }
 
 module.exports = {
+	getCommitDiff: getCommitDiff,
 	getCommitNumber: getCommitNumber,
 	getLatestCommit: getLatestCommit,
 	listCommits: listCommits

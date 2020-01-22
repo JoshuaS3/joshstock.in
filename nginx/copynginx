@@ -17,12 +17,12 @@ if [ "$1" != "prod" ] && [ "$1" != "test" ]; then
 	usage
 fi
 
-if [ ! -f $SCRIPTPATH/nginx/nginx.conf ]; then
-	echo "error: $SCRIPTPATH/nginx/nginx.conf is nonexistent"
+if [ ! -f $SCRIPTPATH/nginx.conf ]; then
+	echo "error: $SCRIPTPATH/nginx.conf is nonexistent"
 	exit 1
 fi
 echo -e "copying nginx.conf"
-cp -v $SCRIPTPATH/nginx/nginx.conf /etc/nginx/nginx.conf
+cp -v $SCRIPTPATH/nginx.conf /etc/nginx/nginx.conf
 
 if [ -d /etc/nginx/joshstock.in/ ]; then
 	echo -e "clearing /etc/nginx/joshstock.in/"
@@ -32,12 +32,12 @@ else
 	mkdir -pv /etc/nginx/joshstock.in/
 fi
 
-if [ ! -d $SCRIPTPATH/nginx/$1 ]; then
-	echo -e "error: $SCRIPTPATH/nginx/$1 is nonexistent"
+if [ ! -d $SCRIPTPATH/$1 ]; then
+	echo -e "error: $SCRIPTPATH/$1 is nonexistent"
 	exit 1
 fi
 echo -e "copying $1 configuration"
-cp -rv $SCRIPTPATH/nginx/$1/* /etc/nginx/joshstock.in/
+cp -rv $SCRIPTPATH/$1/* /etc/nginx/joshstock.in/
 
 echo -e "attempting to reload nginx"
 service nginx reload

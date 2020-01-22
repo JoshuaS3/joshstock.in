@@ -17,7 +17,7 @@ function getLatestCommit(repository, branch) {
 	let commit_raw;
 	try {
 		commit_raw = execute(repository, `log ${branch || 'HEAD'} --pretty=format:'%aI ## %H ## %an ## %ae ## %s ## %b' -n 1 --`).split(' ## ');
-	} catch {
+	} catch (e) {
 		return null;
 	}
 	let commit = {};

@@ -44,3 +44,10 @@ repositories:
     location:
       dev: "/home/josh/Desktop/joshstock.in/.git"
       prod: "/home/git/joshstock.in.git"
+  - name: futaba
+    description: "my simplewriter branch of the futaba bot"
+    branch: simplewriter
+    github: "https://github.com/JoshuaS3/futaba"
+    location:
+      dev: "/home/josh/Desktop/futaba/.git"
+      prod: "/home/git/futaba.git"

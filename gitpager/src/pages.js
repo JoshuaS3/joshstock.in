@@ -35,7 +35,7 @@ function repository(repo, page) {
 
 		let inline = template(config.templates.inline_commit, {'name': repo, 'hash': commit.hash, 'shorthash': stats, 'date': date, 'subject': commit.subject, 'author': commit.author, 'email': commit.email});
 
-		let dayString = commitTime.toLocaleDateString('en-US', {month:'long',day:'numeric',year:'numeric'});
+		let dayString = commitTime.toLocaleDateString('en-US', {timeZone:'America/Chicago',month:'long',day:'numeric',year:'numeric'});
 		if (dayString != lastDate) {
 			lastDate = dayString;
 			commitList += '<h2 class=\"date category\">' + dayString + '</h2>';

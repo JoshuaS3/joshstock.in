@@ -1,24 +1,61 @@
 {
-	"copyright": "<center style=\"margin-top:2em\"><p>© Copyright 2020 Joshua 'joshuas3' Stockin - <a href=\"/\">Home</a> - <a href=\"/blog\">Blog</a> - <a href=\"/privacy\">Privacy</a></p></center>",
-	"static": "resources/static",
+	"domain": "https://joshstock.in",
+	"static_directory": "resources/static",
 	"templates": {
-		"blog-archive": "resources/templates/blog-archive.html",
 		"blog-article": "resources/templates/blog-article.html",
-		"blog-archive-listing": "resources/templates/blog-archive-listing.html",
-		"blog-css": "resources/templates/blog.css",
-		"landing": "resources/landing.html",
-                "favicon": "resources/favicon.ico",
-		"privacy": "resources/privacy.html",
-		"404": "resources/templates/error.html"
+		"blog-listing": "resources/templates/blog-listing.html",
+		"footer": "resources/templates/footer.html",
+		"meta": "resources/templates/meta.html",
+		"sitemap": "resources/templates/sitemap.xml"
 	},
+	"pages": [
+		{
+			"location": "/",
+			"title": "Josh Stockin",
+			"description": "The personal website, blog, and portfolio of Josh Stockin",
+			"priority": 1.0,
+			"file": "resources/pages/landing.html",
+			"destination": "index.html"
+		}, {
+			"location": "/blog",
+			"title": "Blog - Josh Stockin",
+			"description": "The personal blog of Josh Stockin",
+			"priority": 0.9,
+			"file": "resources/pages/blog.html",
+			"destination": "blog.html"
+		}, {
+			"location": "/privacy",
+			"title": "Privacy Policy - Josh Stockin",
+			"description": "The privacy policy for https://joshstock.in",
+			"priority": 0.5,
+			"file": "resources/pages/privacy.html",
+			"destination": "privacy.html"
+		}
+	],
+	"copy": [
+		{
+			"location": "favicon.ico",
+			"file": "resources/favicon.ico"
+		}, {
+			"location": "error-404.html",
+			"file": "resources/error.html"
+		}
+	],
 	"articles": [
 		{
-			"title": "Creating My Website Stack",
-			"date": "NOV 16 2019",
+			"title": "Building a Remote Control Snow Plow",
+			"identifier": "building-a-remote-control-snow-plow",
+			"datestring": "MAR 23 2020",
+			"banner": "https://i.imgur.com/8Mfkbjl.png",
+			"description": "Planning, designing, building, and programming my two-years-and-going hobby project; a remote control robot that plows my driveway.",
+			"markdown": "resources/articles/snow-plow.md"
+		}, {
+			"title": "Writing My Website Stack",
+			"identifier": "creating-my-website-stack",
+			"datestring": "NOV 16 2019",
 			"banner": "/static/site-compile.png",
-			"summary": "Designing and creating a statically hosted website; writing a custom HTML compiler in Python; configuring nginx to serve HTML pages and static files; and automatically deploying into production.",
-			"sections": ["Design", "Creating Site Templates", "Writing the Compiler", "Serving Webpages", "Automatic Deployment into Production", "Publishing the Website"],
-			"content": "resources/articles/website-creation.html"
+			"description": "How to write a statically-hosted, self-deploying blog, using a custom template engine to generate content, and nginx to serve it.",
+			"markdown": "resources/articles/website-creation.md"
 		}
 	]
 }

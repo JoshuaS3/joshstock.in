@@ -1,171 +1,198 @@
 #!/usr/bin/env python3
+"""Open source template engine for compilation of the static joshstock.in"""
 
 import sys
 import os
 import shutil
 import json
-import re
-
-def readfile(filename):
-	try:
-		with open(filename, "r") as file:
-			s = file.read()
-			file.close()
-			return s
-	except FileNotFoundError:
-		print(filename + " not found. exiting")
-		exit(1)
-	except:
-		print("can't open " + filename + " for reading. exiting")
-		exit(1)
-
-def writefile(filename, text):
-	try:
-		with open(filename, "w") as file:
-			file.write(text)
-			file.close()
-	except:
-		print("can't open " + filename + " for writing. exiting")
-		exit(1)
-
-def empty_dir(path):
-	for file in os.listdir(path):
-		filepath = os.path.join(path, file)
-		try:
-			if os.path.isfile(filepath):
-				os.unlink(filepath)
-			elif os.path.isdir(filepath):
-				shutil.rmtree(filepath)
-		except Exception as e:
-			print("error while trying to empty working directory")
-			print(e)
-			exit(1)
-
-routemaps = {}
-sitemap = """<?xml version="1.0" encoding="UTF-8"?>
-<urlset
-	xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"
-	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-	xsi:schemaLocation="http://www.sitemaps.org/schemas/sitemap/0.9
-	http://www.sitemaps.org/schemas/sitemap/0.9/sitemap.xsd">"""
-def routemap(route, priority=0.5):
-	routemaps[route] = True
-	global sitemap
-	sitemap += "<url><loc>https://joshstock.in" + route + "</loc><priority>" + str(priority) + "</priority></url>"
-
-def main():
-	print("emptying working directory")
-	empty_dir(out_path)
-
-	print("reading config")
-	config = json.loads(readfile("config.json"))
-
-	# Static
-	print("copying static")
-	shutil.copytree(config["static"], os.path.join(out_path, "static"))
-
-	# Favicon
-	print("copying favicon")
-	shutil.copy(config["templates"]["favicon"], os.path.join(out_path, "favicon.ico"))
-
-	# Index
-	print("creating landing")
-	landing = readfile(config["templates"]["landing"])
-	file = os.path.join(out_path, "index.html")
-	writefile(file, landing)
-	routemap("/", 1.0)
-
-	# CSS
-	print("copying CSS source")
-	blog_css = readfile(config["templates"]["blog-css"])
-	file = os.path.join(out_path, "blog.css")
-	writefile(file, blog_css)
-
-	# Privacy
-	print("creating privacy policy page")
-	privacy = readfile(config["templates"]["privacy"])
-	privacy = privacy.replace("$copyright", config["copyright"])
-	file = os.path.join(out_path, "privacy.html")
-	writefile(file, privacy)
-	routemap("/privacy", 0.5)
-
-	# /blog*
-	print("creating blog articles")
-	listings = ""
-	article_listing_template = readfile(config["templates"]["blog-archive-listing"])
-	article_template = readfile(config["templates"]["blog-article"])
-
-	for article in config["articles"]:
-		# Create article
-		print("creating article \"" + article["title"] + "\"")
-		titleFixed = re.sub("[^A-Za-z0-9]", "-", article["title"].lower())
-		path = "/blog/"+titleFixed
-
-		# Update archive listings
-		listinghtml = "" + article_listing_template
-		listinghtml = listinghtml.replace("$title", article["title"])
-		listinghtml = listinghtml.replace("$date", article["date"])
-		listinghtml = listinghtml.replace("$banner", article["banner"])
-		listinghtml = listinghtml.replace("$summary", article["summary"])
-		sections = ""
-		if "sections" in article:
-			sections = "<ol style=\"list-style-type:auto; padding-left:20px\"><b>Contents</b>"
-			for section in article["sections"]:
-				sectionTag = re.sub("[^A-Za-z0-9]", "-", section).lower()
-				sections += "<li><a href=\"" + path + "#" + sectionTag + "\">" + section + "</a></li>"
-			sections += "</ol>"
-		listinghtml = listinghtml.replace("$sections", sections)
-		listinghtml = listinghtml.replace("$permalink", path)
-		listings = listinghtml + listings
-
-		articlehtml = "" + article_template
-		articlehtml = articlehtml.replace("$title", article["title"])
-		articlehtml = articlehtml.replace("$date", article["date"])
-		articlehtml = articlehtml.replace("$banner", article["banner"])
-		articlehtml = articlehtml.replace("$content", readfile(article["content"]))
-		articlehtml = articlehtml.replace("$summary", article["summary"])
-		articlehtml = articlehtml.replace("$sections", sections)
-		articlehtml = articlehtml.replace("$copyright", config["copyright"])
-		file = os.path.join(out_path, "blog-"+titleFixed+".html")
-		articlehtml = articlehtml.replace("$permalink", path)
-		writefile(file, articlehtml)
-		routemap(path, 0.7)
+import markdown2
+import readtime
 
 
-	# Blog archive
-	print("creating blog archive")
-	archive_template = readfile(config["templates"]["blog-archive"])
-	archive_template = archive_template.replace("$articles", listings)
-	archive_template = archive_template.replace("$copyright", config["copyright"])
-	file = os.path.join(out_path, "blog.html")
-	writefile(file, archive_template)
-	routemap("/blog", 0.9)
+def file_read(filename: str):
+    """Read text from file by filename"""
+    try:
+        with open(filename, "r") as file:
+            return file.read()
+    except FileNotFoundError:
+        print(f"[file_read] '{filename}' not found. exiting...")
+        exit(1)
+    except Exception as error:
+        print(f"[file_read] error while trying to read from '{filename}':")
+        print(error)
+        print("[file_read] exiting...")
+        exit(1)
 
-	# Error 404
-	print("creating 404 error page")
-	e404 = readfile(config["templates"]["404"])
-	file = os.path.join(out_path, "error-404.html")
-	writefile(file, e404)
 
-	# Routemap config
-	print("writing sitemap to sitemap.xml")
-	global sitemap
-	sitemap += "</urlset>"
-	writefile(os.path.join(out_path, "sitemap.xml"), sitemap)
+def file_write(filename: str, text: str):
+    """Write text to file by filename"""
+    try:
+        with open(filename, "w") as file:
+            file.write(text)
+    except Exception as error:
+        print(f"[file_write] error while trying to write to '{filename}':")
+        print(error)
+        print("[file_write] exiting...")
+        exit(1)
+
+
+def directory_empty(path: str):
+    """Clear file directory by path"""
+    for file in os.listdir(path):
+        filepath = os.path.join(path, file)
+        try:
+            if os.path.isfile(filepath):
+                os.unlink(filepath)
+            elif os.path.isdir(filepath):
+                shutil.rmtree(filepath)
+        except Exception as error:
+            print(f"[directory_empty] error while trying to empty directory {path}:")
+            print(error)
+            print("[directory_empty] exiting...")
+            exit(1)
+
+
+ROUTEMAP = {}
+TEMPLATES = {}
+
+
+def template_fill(template_string: str, template_keys: dict):
+    """Fills in all template key placeholders in template_string"""
+    global TEMPLATES
+    return_string = template_string
+    did_fill = False
+    for key in template_keys:
+        if f"${key}" in return_string:
+            return_string = return_string.replace(f"${key}", template_keys[key])
+            did_fill = True
+    for key in TEMPLATES:
+        if f"${key}" in return_string:
+            return_string = return_string.replace(f"${key}", TEMPLATES[key])
+            did_fill = True
+    if did_fill:
+        return_string = template_fill(return_string, template_keys)
+    return return_string
+
+
+def templates_load(templates_config: dict):
+    """Preload templates from their files"""
+    templates = {}
+    for temp in templates_config:
+        print(f"[templates_load] loading template '{temp}'")
+        templates[temp] = file_read(templates_config[temp])
+    return templates
+
+
+def template(output_path: str):
+    """The main template engine to generate the site's static content"""
+    global TEMPLATES
+    global ROUTEMAP
+    print("[template] emptying working directory")
+    directory_empty(output_path)
+
+    print("[template] reading config file at ./config.json")
+    config = json.loads(file_read("config.json"))
+
+    print("[template] copying static directory")
+    output_file = os.path.join(output_path, "static")
+    shutil.copytree(config["static_directory"], output_file)
+
+    print("[template] loading templates from config")
+    TEMPLATES = templates_load(config["templates"])
+
+    print("[template] running blog article generator")
+    blog_article_listings = ""
+    for article in config["articles"]:
+        article_url = f"/blog/{article['identifier']}"
+        print(f"[template/blog] creating article '{article['title']}' at {article_url}")
+
+        content = markdown2.markdown(file_read(article["markdown"]))
+        content_time = str(readtime.of_html(content))
+
+        # Create a new listing for the blog archive page
+        blog_article_listings += template_fill(
+            TEMPLATES["blog-listing"],
+            {
+                "title": article["title"],
+                "datestring": article["datestring"],
+                "readtime": content_time,
+                "banner": article["banner"],
+                "description": article["description"],
+                "permalink": article_url,
+            },
+        )
+
+        # Create blog article from template
+        blog_article = template_fill(
+            TEMPLATES["blog-article"],
+            {
+                "title": article["title"],
+                "datestring": article["datestring"],
+                "readtime": content_time,
+                "banner": article["banner"],
+                "description": article["description"],
+                "permalink": article_url,
+                "content": content,
+            },
+        )
+        output_file = os.path.join(output_path, f"blog-{article['identifier']}.html")
+        file_write(output_file, blog_article)
+        ROUTEMAP[f"{config['domain']}{article_url}"] = 0.7
+
+    TEMPLATES["@blog-listings"] = blog_article_listings
+
+    print("[template] running page generator")
+    for page in config["pages"]:
+        page_url = page["location"]
+        print(f"[template/page] creating page '{page['title']}' at {page_url}")
+        content = template_fill(
+            file_read(page["file"]),
+            {
+                "title": page["title"],
+                "description": page["description"],
+                "permalink": page_url,
+            },
+        )
+        output_file = os.path.join(output_path, page["destination"])
+        file_write(output_file, content)
+        ROUTEMAP[f"{config['domain']}{page_url}"] = page["priority"]
+
+    print("[template] copying custom static files")
+    for copy in config["copy"]:
+        print(f"[template/copy] copying file '{copy['file']}' to '{copy['location']}'")
+        output_file = os.path.join(output_path, copy["location"])
+        shutil.copy(copy["file"], output_file)
+
+    print("[template] compiling sitemap XML")
+    sitemap = TEMPLATES["sitemap"]
+    for route in ROUTEMAP:
+        sitemap += (
+            f"<url><loc>{route}</loc><priority>{ROUTEMAP[route]}</priority></url>"
+        )
+    sitemap += "</urlset>"
+    output_file = os.path.join(output_path, "sitemap.xml")
+    file_write(output_file, sitemap)
+
+    print("[template] finished")
+
 
 if __name__ == "__main__":
-	if len(sys.argv) < 2:
-		folder_out = "/var/www/html"
-	else:
-		folder_out = sys.argv[1]
-	print("compile.py starting")
-	print("changing active directory to script location")
-	os.chdir(sys.path[0])
-	if not os.path.isdir(folder_out):
-		print(folder_out + " is not a valid folder location. exiting")
-		exit(1)
-	out_path = os.path.abspath(folder_out)
-	print("output set to " + out_path)
-	print("beginning main routine")
-	main()
-	print("finished")
+    if len(sys.argv) < 2:
+        FOLDER_OUT = "/var/www/html"
+    else:
+        FOLDER_OUT = sys.argv[1]
+    print(f"[main] compile.py starting")
+    print(f"[main] changing active directory to script location")
+    os.chdir(sys.path[0])
+    if not os.path.isdir(FOLDER_OUT):
+        print(f"[main] {FOLDER_OUT} is not a valid folder location. exiting...")
+        exit(1)
+    OUTPUT_PATH = os.path.abspath(FOLDER_OUT)
+    print(f"[main] output path set to {OUTPUT_PATH}")
+    print(f"[main] running template engine routine")
+    template(OUTPUT_PATH)
+    print(f"[main] finished. exiting...")
+    exit(0)
+else:
+    print(f"[main] script is not __main__. exiting...")
+    exit(1)

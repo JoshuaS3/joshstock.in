@@ -1,16 +1,7 @@
 <!DOCTYPE html>
 <html>
 	<head>
-		<meta http-equiv="content-type" content="text/html; charset=utf-8">
-		<title>Josh Stockin</title>
-		<meta name="title" content="Josh Stockin" />
-		<meta name="description" content="The personal website, blog, and portfolio of Josh Stockin" />
-		<meta property="og:site_name" content="Josh Stockin" />
-		<meta property="og:title" content="Josh Stockin" />
-		<meta property="og:description" content="The personal website, blog, and portfolio of Josh Stockin" />
-		<meta property="og:type" content="website" />
-		<meta property="og:image" content="/static/favicon.png" />
-		<meta property="og:url" content="https://joshstock.in" />
+$meta
 		<style>
 			@import url('https://fonts.googleapis.com/css?family=Fira+Sans:400,400i,500&display=swap');
 			html{
@@ -18,8 +9,8 @@
 				align-items: center;
 				justify-content: center;
 				height: 100vh;
-			    font-family: 'Fira Sans', sans-serif;
-			    letter-spacing: -1px;
+				font-family: 'Fira Sans', sans-serif;
+				letter-spacing: -1px;
 				color: #eee;
 				text-shadow: 2px 2px 8px #000;
 			}
@@ -30,9 +21,9 @@
 				/*background-color: #497fc6;*/
 				background:
 					linear-gradient(
-						rgba(0, 0, 0, 0.7),
-						rgba(0, 0, 0, 0.7)
-					), 
+						rgba(0, 0, 0, 0.65),
+						rgba(0, 0, 0, 0.65)
+					),
 					url(/static/esp32.jpg) no-repeat center center fixed;
 				background-size: cover;
 			}
@@ -42,13 +33,14 @@
 				text-align: center;
 			}
 			h1 {font-size:6em;}
-			p {font-size:2.5em;}
-			p.small {font-size:1.75em;}
+			p {font-size:2.5em;margin:10px;}
+			p.small {font-size:1.75em;letter-spacing: 0px;}
 			a {
-				color: #eee;
+				color: #ffffffdd;
 				text-decoration: none;
 			}
 			a:hover {
+				color: #ffffffff;
 				text-decoration: underline;
 			}
 			ul {
@@ -56,23 +48,23 @@
 				padding: 0;
 			}
 			li {
-				font-size: 1.75em;
-				display: inline;
-				padding: 0 0.8em;
+				font-size: 24px;
+				display: inline-block;
+				padding: 0 18px;
 			}
 			@media (max-width: 800px) {
 				body {
 					font-size: 2vw;
+					overflow: hidden;
 				}
 			}
 		</style>
-		<meta name="viewport" content="width=device-width, initial-scale=1">
 	</head>
 	<body>
 		<div>
 			<h1 style="margin:20px">Josh Stockin</h1>
-			<p style="margin: 10px">A 16-year-old aspiring software engineer</p>
-			<p class="small" style="margin: 10px; font-style: italic;"><a href="mailto:joshstockin@gmail.com">joshstockin@gmail.com</a></p>
+			<p>A 16-year-old aspiring software engineer</p>
+			<p class="small"><a href="mailto:joshstockin@gmail.com"><em>joshstockin@gmail.com</em></a></p>
 		</div>
 		<div style="position: absolute; bottom: 40px;">
 			<ul>

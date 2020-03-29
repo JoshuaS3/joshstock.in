@@ -1,18 +1,9 @@
 <!DOCTYPE html>
 <html>
 	<head>
-		<meta http-equiv="content-type" content="text/html; charset=utf-8">
-		<title>$title - Josh Stockin</title>
-		<meta name="title" content="$title" />
-		<meta name="description" content="$summary" />
-		<meta property="og:site_name" content="Josh Stockin" />
-		<meta property="og:title" content="$title" />
-		<meta property="og:description" content="$summary" />
-		<meta property="og:type" content="article" />
-		<meta property="og:image" content="/static/favicon.png" />
-		<meta property="og:url" content="https://joshstock.in$permalink" />
-		<link rel="stylesheet" href="/blog.css">
-		<meta name="viewport" content="width=device-width, initial-scale=1.0">
+$meta
+		<link rel="stylesheet" href="/static/blog.css">
+		<link rel="stylesheet" href="/static/footer.css">
 	</head>
 	<body onscroll="scroll();">
 		<div class="blog-banner" style="background-image: url($banner);"></div>
@@ -20,25 +11,10 @@
 			<div class="blog-center">
 				<span><a href="/blog"><< Back to archive</a></span>
 				<h1 class="blog-top-1" style="margin-top:0">$title</h1>
-				<p class="blog-top-2"><code>$date</code></p>
+				<p class="blog-top-2"><code>$datestring</code><i class="blog-readtime">$readtime</i></p>
 				$content
 				<p><a href="$permalink">Article Permalink</a></p>
-				<script>
-					let blog_center = document.getElementsByClassName("blog-center")[0];
-					let headers = blog_center.getElementsByTagName("h2");
-					for (let i = 0; i < headers.length; i++) {
-						let header = headers[i];
-						let inner = header.innerHTML;
-						let id = inner.replace(/[^a-z0-9]/gi,"-").toLowerCase();
-						header.id = id;
-						header.innerHTML = "<a href=\"#" + id + "\">" + inner + "</a>";
-					};
-					let blog_banner = document.getElementsByClassName("blog-banner")[0];
-					function scroll() {
-						blog_banner.style["background-position"] = "50% " + (50 - (window.scrollY/20)).toString() + "%";
-					};
-					scroll();
-				</script>
+				<script type="text/javascript" src="/static/banner_scroll.js"></script>
 				<div id="disqus_thread"></div>
 				<script>
 				var disqus_config = function () {
@@ -53,7 +29,7 @@
 				})();
 				</script>
 				<noscript><p>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</p></a></noscript>
-				$copyright
+$footer
 			</div>
 		</div>
 	</body>

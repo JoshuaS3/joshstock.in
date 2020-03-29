@@ -16,10 +16,6 @@ code {
 .gist .gist-file {
 	overflow: auto;
 	margin: 0;
-	margin-bottom: 1.5em;
-}
-.gist table {
-	table-layout: fixed;
 }
 #copyright {
 	padding: 20px 0;
@@ -30,9 +26,7 @@ hr {
 }
 
 .blog-page {
-	position: absolute;
 	width: 100%;
-	top: 20vh;
 }
 .blog-center {
 	max-width: 700px;
@@ -42,6 +36,7 @@ hr {
 	line-height: 1.5;
 	background-color: #fff;
 }
+
 .blog-center h1 {
 	margin-top:0;
 }
@@ -60,6 +55,7 @@ hr {
 	margin-top:0;
 	margin-bottom:1em;
 }
+
 .blog-banner {
 	width:100%;
 	height: 40vh;
@@ -72,6 +68,7 @@ hr {
 .blog-banner.thumb {
 	height: 250px;
 }
+
 h1.blog-top-1 {
 	margin-top:1em;
 	margin-bottom:0;
@@ -79,27 +76,26 @@ h1.blog-top-1 {
 p.blog-top-2 {
 	margin-top:0;
 }
-.blog-img-full {
+i.blog-readtime {
+	margin-left: 10px;
+}
+
+.block {
+	width: 760px;
+	display: block;
+	margin: 10px -30px 16px -30px;
+}
+.block img {
 	max-width: 100%;
-	display: inline-block;
-	margin: 10px 0 10px 0;
-}
-.blog-img-right {
 	max-height: 500px;
-	max-width: 50%;
-	margin: 0 0 10px 20px;
-	float: right;
+	margin: 0 auto;
+	display: block;
 }
-.blog-img-left {
-	max-height: 500px;
-	max-width: 50%;
-	margin: 0 20px 10px 0;
-	float: left;
-}
+
 .blog-listing {
 	box-shadow: 0 4px 8px 0 #b5b5b5;
 	border-radius: 10px;
-	margin-bottom: 4em;
+	margin-bottom: 2em;
 	transition: box-shadow 100ms;
 }
 .blog-listing .blog-top-1 {
@@ -114,16 +110,14 @@ p.blog-top-2 {
 .blog-listing-container {
 	padding:1em;
 }
-.blog-listing code {
-	margin-right: 10px;
-}
 
 @media (max-width: 840px) {
 	.blog-center {
 		padding: 1em;
 	}
-	.blog-page {
-		top: 40vw;
+	.block {
+		width: 100%;
+		margin: 10px 0 10px 0;
 	}
 	.blog-banner, .blog-banner.thumb {
 		height: 40vw;

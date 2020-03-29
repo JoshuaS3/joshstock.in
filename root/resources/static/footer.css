@@ -1,0 +1,14 @@
+#footer {
+	margin: 0 2em;
+}
+#footer>p {
+	margin: 0;
+}
+#footer>ul {
+	padding: 0;
+	list-style: none;
+}
+#footer>ul>li {
+	display: inline-block;
+	margin: 0 4px;
+}

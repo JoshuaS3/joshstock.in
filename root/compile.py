@@ -5,8 +5,13 @@ import sys
 import os
 import shutil
 import json
-import markdown2
-import readtime
+try:
+    import markdown2
+    import readtime
+except ImportError:
+    print("[GLOBAL] can't import required modules. are they installed?")
+    print("[GLOBAL] exiting...")
+    exit(1)
 
 
 def file_read(filename: str):

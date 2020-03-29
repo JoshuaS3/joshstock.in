@@ -14,6 +14,8 @@ do
 	then
 		echo "Ref $ref received. Deploying ${BRANCH} branch to production..."
 		git --work-tree=$TARGET --git-dir=$GIT_DIR checkout -f $BRANCH
+		echo "Installing required Python modules"
+		sudo python3.7 -m pip install -r $TARGET/requirements.txt
 		echo "Compiling root HTML"
 		sudo $TARGET/root/compile.py $HTML_OUT
 		echo "Copying nginx configuration"

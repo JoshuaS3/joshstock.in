@@ -44,13 +44,13 @@ repositories:
     location:
       dev: "/home/josh/Desktop/joshstock.in/.git"
       prod: "/home/git/joshstock.in.git"
-  - name: lua-stl-plus
-    description: "an extension of Lua's standard library"
+  - name: lua-stdlib-plus
+    description: "an extension of the Lua 5.3 standard library"
     branch: master
-    github: "https://github.com/JoshuaS3/lua-stl-plus"
+    github: "https://github.com/JoshuaS3/lua-stdlib-plus"
     location:
-      dev: "/home/josh/Desktop/lua-stl-plus/.git"
-      prod: "/home/git/lua-stl-plus.git"
+      dev: "/home/josh/Desktop/lua-stdlib-plus/.git"
+      prod: "/home/git/lua-stdlib-plus.git"
   - name: futaba
     description: "my simplewriter branch of the futaba bot"
     branch: simplewriter

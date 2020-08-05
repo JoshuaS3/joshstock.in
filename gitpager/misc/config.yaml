@@ -25,7 +25,7 @@ repositories:
       - dev
     github: "https://github.com/JoshuaS3/lognestmonster"
     location:
-      dev: "/home/josh/Desktop/lognestmonster/.git"
+      dev: "/home/josh/repos/lognestmonster/.git"
       prod: "/home/git/lognestmonster.git"
   - name: auto-plow
     description: "a remote control snow plow controlled by an ESP32, propelled by electric wheelchair motors, and powered by 24v batteries"
@@ -35,26 +35,26 @@ repositories:
       - dev
     github: "https://github.com/JoshuaS3/auto-plow"
     location:
-      dev: "/home/josh/Desktop/auto-plow/.git"
+      dev: "/home/josh/repos/auto-plow/.git"
       prod: "/home/git/auto-plow.git"
   - name: joshstock.in
     description: "my personal website, blog, portfolio"
     branch: master
     github: "https://github.com/JoshuaS3/joshstock.in"
     location:
-      dev: "/home/josh/Desktop/joshstock.in/.git"
+      dev: "/home/josh/repos/joshstock.in/.git"
       prod: "/home/git/joshstock.in.git"
   - name: lua-stdlib-plus
     description: "an extension of the Lua 5.3 standard library"
     branch: master
     github: "https://github.com/JoshuaS3/lua-stdlib-plus"
     location:
-      dev: "/home/josh/Desktop/lua-stdlib-plus/.git"
+      dev: "/home/josh/repos/lua-stdlib-plus/.git"
       prod: "/home/git/lua-stdlib-plus.git"
   - name: futaba
     description: "my simplewriter branch of the futaba bot"
     branch: simplewriter
     github: "https://github.com/JoshuaS3/futaba"
     location:
-      dev: "/home/josh/Desktop/futaba/.git"
+      dev: "/home/josh/repos/futaba/.git"
       prod: "/home/git/futaba.git"

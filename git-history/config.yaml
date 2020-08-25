@@ -1,0 +1,24 @@
+---
+
+meta:
+  repos: # repository URLs and paths
+    github: "https://github.com/JoshuaS3/"
+    dev: "/home/josh/repos/"
+    prod: "/home/git/"
+  templates: # HTML templates
+    - name: asdf
+      file: templates/qwerty
+repositories:
+  - name: lognestmonster
+    head: dev
+    description: "a general-purpose single-header C logging library and parser for event-based logs"
+  - name: auto-plow
+    description: "A wheelchair motor-propelled battery-powered ESP32-driven remote control snow plow."
+  - name: joshstock.in
+    description: "Source code for compilation and serving of https://joshstock.in"
+  - name: craft
+    description: "an attempted Minecraft clone, written in C/C++"
+  - name: lua-stdlib-plus
+    description: "an extension of the Lua 5.3 standard library"
+  - name: dotfiles
+    description: "my collection of configuration dotfiles and miscellaneous scripts and tools"

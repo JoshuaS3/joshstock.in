@@ -17,18 +17,8 @@ templates:
   - name: inline_repository
     path: templates/inline_repository.html
 repositories:
-  - name: lognestmonster
-    description: "a single-header C logging library and parser for event-based logs"
-    branch: dev
-    allows:
-      - master
-      - dev
-    github: "https://github.com/JoshuaS3/lognestmonster"
-    location:
-      dev: "/home/josh/repos/lognestmonster/.git"
-      prod: "/home/git/lognestmonster.git"
   - name: auto-plow
-    description: "a remote control snow plow controlled by an ESP32, propelled by electric wheelchair motors, and powered by 24v batteries"
+    description: "A wheelchair motor-propelled battery-powered ESP32-driven remote control snow plow."
     branch: dev
     allows:
       - master
@@ -38,23 +28,26 @@ repositories:
       dev: "/home/josh/repos/auto-plow/.git"
       prod: "/home/git/auto-plow.git"
   - name: joshstock.in
-    description: "my personal website, blog, portfolio"
+    description: "Source for serving and static templating/compiling of https://joshstock.in."
     branch: master
     github: "https://github.com/JoshuaS3/joshstock.in"
     location:
       dev: "/home/josh/repos/joshstock.in/.git"
       prod: "/home/git/joshstock.in.git"
-  - name: lua-stdlib-plus
-    description: "an extension of the Lua 5.3 standard library"
+  - name: ncurses-minesweeper
+    description: "Terminal game of Minesweeper, implemented in C with ncurses."
     branch: master
-    github: "https://github.com/JoshuaS3/lua-stdlib-plus"
+    github: "https://github.com/JoshuaS3/ncurses-minesweeper"
     location:
-      dev: "/home/josh/repos/lua-stdlib-plus/.git"
-      prod: "/home/git/lua-stdlib-plus.git"
-  - name: futaba
-    description: "my simplewriter branch of the futaba bot"
-    branch: simplewriter
-    github: "https://github.com/JoshuaS3/futaba"
+      dev: "/home/josh/repos/ncurses-minesweeper/.git"
+      prod: "/home/git/ncurses-minesweeper.git"
+  - name: lognestmonster
+    description: "A general-purpose single-header C logging library and parser for event-based logs."
+    branch: dev
+    allows:
+      - master
+      - dev
+    github: "https://github.com/JoshuaS3/lognestmonster"
     location:
-      dev: "/home/josh/repos/futaba/.git"
-      prod: "/home/git/futaba.git"
+      dev: "/home/josh/repos/lognestmonster/.git"
+      prod: "/home/git/lognestmonster.git"

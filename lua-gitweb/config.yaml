@@ -1,0 +1,20 @@
+---
+
+meta:
+  repos: # repository URLs and paths
+    github: "https://github.com/JoshuaS3/"
+    dev: "/home/josh/repos/"
+    prod: "/home/git/"
+  templates: # HTML templates
+    - name: asdf
+      file: templates/qwerty
+repositories:
+  - name: auto-plow
+    description: "A wheelchair motor-propelled battery-powered ESP32-driven remote control snow plow."
+  - name: joshstock.in
+    description: "Source for serving and static templating/compiling of https://joshstock.in."
+  - name: ncurses-minesweeper
+    description: "Terminal game of Minesweeper, implemented in C with ncurses."
+  - name: lognestmonster
+    head: dev
+    description: "A general-purpose single-header C logging library and parser for event-based logs."

@@ -12,10 +12,17 @@ local _M = {}
 
 local git = function(repo_dir, command)
     local formatted_command = string.format(
-        "/usr/bin/git --git-dir=%s/.git --work-tree=%s %s",
+        "git --git-dir=%s/.git --work-tree=%s %s",
         repo_dir, repo_dir, command
     )
     return utils.process(formatted_command)
+end
+
+_M.show_file = function(repo_dir, hash, filename)
+    hash = hash or "@"
+    filename = filename or ""
+    local output = git(repo_dir, "show "..hash..":"..filename)
+    return output
 end
 
 _M.get_head = function(repo_dir)
@@ -30,45 +37,23 @@ _M.get_head = function(repo_dir)
     return head
 end
 
-_M.diffstat = function(repo_dir, hash)
-    hash = hash or "@"
-    local output = git(repo_dir, "diff --numstat --shortstat "..hash.."^ --")
-    local stat = {}
-    local a = string.split(output, "\n")
-    table.remove(a,#a)
-    stat.shortstat = a[#a]
-    table.remove(a,#a)
-    stat.plus = 0
-    stat.minus = 0
-    stat.files = {}
-    for i,v in pairs(a) do
-        local b = string.split(v,"\t")
-        local f = {}
-        f.plus = tonumber(b[1])
-        stat.plus = stat.plus + f.plus
-        f.minus = tonumber(b[2])
-        stat.minus = stat.minus + f.minus
-        stat.files[b[3]] = f
-    end
-    return stat
-end
-
 _M.count = function(repo_dir, hash)
     hash = hash or "@"
     local output = git(repo_dir, "rev-list --count "..hash.." --")
     return tonumber(string.trim(output))
 end
 
-_M.log = function(repo_dir, hash, number, skip, gpg)
+_M.log = function(repo_dir, hash, file, number, skip, gpg)
     hash = hash or "@"
+    file = file or ""
     number = tostring(number or 25)
     skip = tostring(skip or 0)
     gpg = gpg or false
     local output
     if gpg then
-        output = git(repo_dir, "log --pretty=tformat:'%x00%x01%H%x00%cI%x00%cn%x00%ce%x00%s%x00%b%x00%G?%x00%GK%x00%GG%x00' --numstat -n "..number.." --skip "..skip.." "..hash.." --")
+        output = git(repo_dir, "log --pretty=tformat:'%x00%x01%H%x00%cI%x00%cn%x00%ce%x00%s%x00%b%x00%G?%x00%GK%x00%GG%x00' --numstat -n "..number.." --skip "..skip.." "..hash.." -- "..file)
     else
-        output = git(repo_dir, "log --pretty=tformat:'%x00%x01%H%x00%cI%x00%cn%x00%ce%x00%s%x00%b%x00' --numstat -n "..number.." --skip "..skip.." "..hash.." --")
+        output = git(repo_dir, "log --pretty=tformat:'%x00%x01%H%x00%cI%x00%cn%x00%ce%x00%s%x00%b%x00' --numstat -n "..number.." --skip "..skip.." "..hash.." -- "..file)
     end
     local commits = {}
     local a = string.split(output,"\0\1")
@@ -97,6 +82,7 @@ _M.log = function(repo_dir, hash, number, skip, gpg)
             local b = string.split(diffs, "\n")
             commit.diff.plus = 0
             commit.diff.minus = 0
+            commit.diff.num = 0
             commit.diff.files = {}
             for i,v in pairs(b) do
                 local d = string.split(v,"\t")
@@ -106,6 +92,7 @@ _M.log = function(repo_dir, hash, number, skip, gpg)
                 x.minus = tonumber(d[2]) or 0
                 commit.diff.minus = commit.diff.minus + x.minus
                 commit.diff.files[d[3]] = x
+                commit.diff.num = commit.diff.num + 1
             end
             table.insert(commits, commit)
         else
@@ -165,6 +152,50 @@ _M.list_refs = function(repo_dir)
     refs.heads = _M.heads(repo_dir)
     refs.tags = _M.tags(repo_dir)
     return refs
+end
+
+_M.list_dirs = function(repo_dir, hash, path)
+    hash = hash or "@"
+    path = path or ""
+    local output = git(repo_dir, "ls-tree -d --name-only "..hash.." -- "..path)
+    local dirs = string.split(output, "\n")
+    table.remove(dirs, #dirs) -- remove trailing \n
+    return dirs
+end
+
+_M.list_all = function(repo_dir, hash, path)
+    hash = hash or "@"
+    path = path or ""
+    local output = git(repo_dir, "ls-tree --name-only "..hash.." -- "..path)
+    local all = string.split(output, "\n")
+    table.remove(all, #all) -- remove trailing \n
+    return all
+end
+
+_M.list_tree = function(repo_dir, hash, path)
+    hash = hash or "@"
+    path = path or ""
+    local files = _M.list_all(repo_dir, hash, path)
+    local dirs = _M.list_dirs(repo_dir, hash, path)
+    local ret = {}
+    ret.dirs = {}
+    ret.files = {}
+    for i,v in pairs(files) do -- iterate over all objects, separate directories from files
+        local not_dir = true
+        for _,d in pairs(dirs) do -- check if object is directory
+            if v == d then
+                not_dir = false
+                break
+            end
+        end
+        if not_dir then
+            table.insert(ret.files, v)
+        else
+            local b = v.."/"
+            table.insert(ret.dirs, b)
+        end
+    end
+    return ret
 end
 
 return _M

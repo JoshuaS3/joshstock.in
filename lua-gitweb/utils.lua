@@ -1,8 +1,7 @@
 -- utils.lua
--- basic utilities for git status site implementation
+-- Basic utilities/resources for git HTTP site implementation
 
 -- Copyright (c) 2020 Joshua 'joshuas3' Stockin
--- <https://github.com/JoshuaS3/joshstock.in>
 -- <https://joshstock.in>
 
 local _M = {}
@@ -74,11 +73,49 @@ _M.markdown = function(input)
     end
 end
 
+_M.html_sanitize = function(str)
+    return tostring(str):gsub("<", "&lt;")
+              :gsub(">", "&gt;")
+              :gsub("&", "&amp;")
+              :gsub("\"", "&quot;")
+              :gsub("'", "&#039;")
+end
+
 _M.iso8601 = function(iso8601)
     iso8601 = iso8601 or "0000-00-00T00:00:00GMT-5:00"
     local y,mo,d,h,mi,s = iso8601:match("(%d%d%d%d)-(%d%d)-(%d%d)T(%d%d):(%d%d):(%d%d)")
     local luatime = os.time{year=y,month=mo,day=d,hour=h,min=mi,sec=s}
     return os.date("%d %b %Y %H:%M", luatime)
+end
+
+_M.print_table = function(t, l) -- for debugging
+    l = l or 0
+    local n = false
+    for i,v in pairs(t) do n = true break end
+    if n then
+        ngx.print("{\n")
+        for i,v in pairs(t) do
+            for i=0,l do ngx.print("    ") end
+            ngx.print("<span style='color:red'>",i,"</span>: ")
+            if type(v) ~= "table" then
+                if type(v) == "string" then
+                    ngx.print("\"")
+                    local s = v:gsub("&", "&amp;"):gsub("<","&lt;"):gsub(">","&gt;"):gsub("\"","\\&quot;")
+                    ngx.print(s)
+                    ngx.print("\"")
+                else
+                    ngx.print(v)
+                end
+            else
+                _M.print_table(v,l+1)
+            end
+            ngx.print("\n")
+        end
+        for i=0,l-1 do ngx.print("    ") end
+        ngx.print("}")
+    else
+        ngx.print("{}")
+    end
 end
 
 return _M

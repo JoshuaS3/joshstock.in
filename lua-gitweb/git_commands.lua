@@ -1,10 +1,8 @@
 -- git_commands.lua
--- Index of git commands used for the git status site
+-- Index of git commands and parser functions used for the git HTTP site
 
 -- Copyright (c) 2020 Joshua 'joshuas3' Stockin
--- <https://github.com/JoshuaS3/joshstock.in>
 -- <https://joshstock.in>
-
 
 local utils = require("utils")
 
@@ -12,8 +10,8 @@ local _M = {}
 
 local git = function(repo_dir, command)
     local formatted_command = string.format(
-        "git --git-dir=%s/.git --work-tree=%s %s",
-        repo_dir, repo_dir, command
+        "git --git-dir=%s %s",
+        repo_dir, command
     )
     return utils.process(formatted_command)
 end
@@ -25,10 +23,11 @@ _M.show_file = function(repo_dir, hash, filename)
     return output
 end
 
-_M.get_head = function(repo_dir)
+_M.get_head = function(repo_dir, head_name)
+    head_name = head_name or "HEAD"
     local head = {}
-    local name = string.trim(git(repo_dir, "rev-parse --abbrev-ref HEAD"))
-    local output = git(repo_dir, "show-ref --heads "..name)
+    local name = string.trim(git(repo_dir, "rev-parse --abbrev-ref "..head_name))
+    local output = git(repo_dir, "show-ref --heads --tags "..name)
     local a = string.split(string.trim(output), " ")
     head.hash = a[1]
     head.shorthash = string.sub(a[1], 1, 7)
@@ -191,8 +190,7 @@ _M.list_tree = function(repo_dir, hash, path)
         if not_dir then
             table.insert(ret.files, v)
         else
-            local b = v.."/"
-            table.insert(ret.dirs, b)
+            table.insert(ret.dirs, v)
         end
     end
     return ret

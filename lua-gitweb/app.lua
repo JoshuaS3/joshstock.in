@@ -130,8 +130,8 @@ text-decoration-style:dotted;
 .q:hover{
 cursor:help;
 }
-tr:hover,th{ /*darker color for table head, hovered-over rows*/
-background-color:#dedede;
+th, tr:hover{ /*darker color for table head, hovered-over rows*/
+    background-color:#dedede;
 }
 div.markdown{
 width:100%;
@@ -159,19 +159,28 @@ div.blob {
     overflow-x: auto;
 }
 table.blob-lines{
-    font-size:12px;
+    font-size:1em;
     max-width:100%;
+    line-height:1;
+}
+table.blob-lines tr:hover {
+    background-color: inherit;
 }
 table.blob-lines td{
     border:none;
+    padding:1px 5px;
 }
 table.blob-lines td:first-child{
     text-align: right;
     padding-left:20px;
+    cursor: pointer;
     user-select: none;
     color:#858585;
     max-width:1%;
     white-space:nowrap;
+}
+table.blob-lines td:first-child:hover{
+    color: #454545;
 }
 table.blob-lines td:nth-child(2){
     width:100%;

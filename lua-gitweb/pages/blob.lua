@@ -61,6 +61,7 @@ local _M = function(repo, repo_dir, branch, file_path)
     local commits_table_data = {}
     commits_table_data.class = "log"
     commits_table_data.headers = {
+        {"count",     [[<span class="q" title="Commit number/count">{#}</span>]]},
         {"timestamp", "Time"},
         {"shorthash", "Hash"},
         {"subject",   "Subject"},
@@ -82,7 +83,7 @@ N: No signature">GPG?</span>]]}
     commits_table_data.rows = {}
 
     table.insert(commits_table_data.rows, {
-        commit.count,
+        git.count(repo_dir, commit.hash),
         utils.iso8601(commit.timestamp),
         string.format([[<a href="/%s/commit/%s">%s</a>]], repo.name, commit.hash, commit.shorthash),
         utils.html_sanitize(commit.subject),
@@ -131,7 +132,11 @@ N: No signature">GPG?</span>]]}
     text_table.headers = {}
     text_table.rows = {}
     for i, line in pairs(string.split(utils.highlight(content, file_name), "\n")) do
-        table.insert(text_table.rows, {i, line})
+        if line ~= "" then
+            table.insert(text_table.rows, {i, line})
+        else
+            table.insert(text_table.rows, {i, "\n"}) -- preserve newlines for copying/pasting
+        end
     end
 
     build:add(tabulate(text_table))

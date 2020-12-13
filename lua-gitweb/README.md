@@ -1,10 +1,11 @@
-# lua-gitweb
+# resty-gitweb
 
-A git web client for Lua/OpenResty, similar to stagit.
+A git web interface for Lua/OpenResty.
 
 ## Requirements
 
-Lua modules (Lua 5.1/LuaJIT 2.1.0/OpenResty LuaJIT compatible, accessible from Lua path/cpath):
+Lua modules (Lua 5.1/LuaJIT 2.1.0/OpenResty LuaJIT compatible, accessible from
+Lua path/cpath):
 
 | Module | Description |
 | ------ | ----------- |
@@ -29,33 +30,51 @@ Linkable Libraries (installed on system path, accessible with LuaJIT's C FFI):
 ## Using
 
 1. Copy this directory with its scripts to a place OpenResty/nginx workers have
-access, such as `/srv/[SITE]/lua-gitweb`. (In reality it doesn't matter where,
-as long as it's accessible.)
+   access, such as `/srv/[SITE]/resty-gitweb`. (In reality it doesn't matter
+   where, as long as it's accessible.)
 
-2. Copy your config file (`repos.yaml`) to `/etc/[SITE]/repos.yaml` (or somewhere
-else).
+2. Copy your config file (`resty-gitweb.yaml`) to
+   `/etc/[SITE]/resty-gitweb.yaml` (or somewhere else)
 
-3. Add the following near the top (`main` context, outside of any blocks) of your
-OpenResty/nginx configuration file:
+3. Add the following near the top (`main` context, outside of any blocks) of
+   your OpenResty/nginx configuration file:
+
 ```
-env LUA_GITWEB; # Script won't run without this
-env LUA_GITWEB_ENV=PROD; # PROD for Production, DEV for Development. DEV by default.
-env LUA_GITWEB_CONFIG=/etc/[SITE]/repos.yaml; # Wherever you put your configuration file
+# resty-gitweb configuration
+env RESTY_GITWEB;          # Script won't run without this
+env RESTY_GITWEB_ENV=PROD; # PROD for Production, DEV for Development. DEV by default.
+env RESTY_GITWEB_CONFIG=/etc/[SITE]/resty-gitweb.yaml; # Wherever you put your configuration file
 ```
 
 4. Add the following to the `http` block in your OpenResty/nginx configuration
-file:
+   file:
+
 ```
-lua_package_path ";;/srv/[SITE]/lua-gitweb/?.lua"; # Add lua-gitweb to your Lua package path
-init_by_lua_file /srv/[SITE]/lua-gitweb/init.lua; # Initialize modules for nginx workers
+lua_package_path ";;/srv/[SITE]/resty-gitweb/?.lua"; # Add resty-gitweb to your Lua package path
+init_by_lua_file /srv/[SITE]/resty-gitweb/init.lua;  # Initialize modules for nginx workers
 ```
 
 5. And in whichever `location` block you wish to serve content:
+
 ```
-content_by_lua_file /srv/[SITE]/lua-gitweb/app.lua;
+content_by_lua_file /srv/[SITE]/resty-gitweb/app.lua;
 ```
 
 6. Restart OpenResty/nginx
+
+Note that I use "OpenResty/nginx" instead of just OpenResty; if you desire, you
+can actually use nginx with only a few OpenResty components. These are the only
+OpenResty components you actually need to
+[compile](https://www.nginx.com/resources/wiki/extending/compiling/) to use
+this package:
+
+* [lua-nginx-module](https://github.com/openresty/lua-nginx-module)
+* [lua-resty-core](https://github.com/openresty/lua-resty-core)
+* [lua-resty-shell](https://github.com/openresty/lua-resty-shell)
+
+Optionally, you can build these with OpenResty's
+[branch](https://github.com/openresty/luajit2) of LuaJIT 2 instead of the
+original.
 
 ## Copyright and Licensing
 

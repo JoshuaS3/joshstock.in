@@ -4,19 +4,26 @@ A git web client for Lua, similar to stagit.
 
 ## Requirements
 
-Required Lua modules (Lua 5.1/LuaJIT 2.1.0/OpenResty LuaJIT)
-```
-lyaml      Reads and parses YAML config files  https://github.com/gvvaughan/lyaml
-puremagic  Identifies MIME type by content     https://github.com/wbond/puremagic
-```
+Lua modules (Lua 5.1/LuaJIT 2.1.0/OpenResty LuaJIT compatible, accessible from Lua path/cpath):
 
-Other command line tools (must be installed on system path, accessible from
-shell)
-```
-git        Frontend for libgit2, offers shell access     https://git-scm.com/
-md4c       Renders GitHub flavored Markdown              https://github.com/mity/md4c
-highlight  Syntax highlighting for HTML on command line  http://www.andre-simon.de/doku/highlight/en/highlight.php
-```
+| Module | Description |
+| ------ | ----------- |
+| [lfs](https://github.com/keplerproject/luafilesystem) | Filesystem API |
+| [lyaml](https://github.com/gvvaughan/lyaml) | Reads and parses YAML config files |
+| [puremagic](https://github.com/wbond/puremagic) | MIME type by content, used in blob rendering |
+
+Other command line tools (installed on system path, accessible from shell):
+
+| Program | Description |
+| ------- | ----------- |
+| [md4c](https://github.com/mity/md4c) (md2html) | Renders GitHub flavored Markdown |
+| [highlight](http://www.andre-simon.de/doku/highlight/en/highlight.php) | Syntax highlighting in HTML format |
+
+Linkable Libraries (installed on system path, accessible with LuaJIT's C FFI):
+
+| Library | Description |
+| ------- | ----------- |
+| [libgit2](https://github.com/libgit2/libgit2) | Linkable C API for Git |
 
 ## Copyright and Licensing
 

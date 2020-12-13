@@ -59,7 +59,7 @@ local _M = function(repo, repo_dir, branch, path)
     -- Latest Commit table
     build:add("<h3>Latest Commit</h3>")
 
-    local commit = git.commit(repo_dir, branch.name)
+    local commit = git.log(repo_dir, branch.name, path.."/", 1, 0, true)[1]
 
     local commits_table_data = {}
     commits_table_data.class = "log"
@@ -86,7 +86,7 @@ N: No signature">GPG?</span>]]}
     commits_table_data.rows = {}
 
     table.insert(commits_table_data.rows, {
-        commit.count,
+        git.count(repo_dir, commit.hash),
         utils.iso8601(commit.timestamp),
         string.format([[<a href="/%s/commit/%s">%s</a>]], repo.name, commit.hash, commit.shorthash),
         utils.html_sanitize(commit.subject),

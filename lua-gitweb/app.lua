@@ -29,7 +29,7 @@ else -- repo found
         if pcall(function() -- if branch is real
             branch = git.get_head(repo_dir, parsed_uri.parts[3]) -- if parts[3] is nil, defaults to "HEAD"
         end) then
-            if pcall(function() -- effectively catch any errors, 404 if any
+            local res, status = pcall(function() -- effectively catch any errors, 404 if any
                 if view == "tree" then -- directory display (with automatic README rendering)
                     local path = parsed_uri.parts
                     table.remove(path, 3) -- branch
@@ -43,7 +43,17 @@ else -- repo found
 
                     content = require("pages/tree")(repo, repo_dir, branch, path)
                 elseif view == "blob" then
-                    -- /repo/blob/branch/[FILE PATH]
+                    local path = parsed_uri.parts
+                    table.remove(path, 3) -- branch
+                    table.remove(path, 2) -- "tree"
+                    table.remove(path, 1) -- repo
+                    if #path > 0 then
+                        path = table.concat(path, "/")
+                    else
+                        path = ""
+                    end
+
+                    content = require("pages/blob")(repo, repo_dir, branch, path)
                 elseif view == "raw" then
                     -- /repo/raw/branch/[FILE PATH]
                 elseif view == "log" then
@@ -55,7 +65,11 @@ else -- repo found
                 elseif view == "commit" then
                     -- /repo/commit/[COMMIT HASH]
                 end
-            end) ~= true then
+            end) -- pcall
+
+            if res ~= true then
+                ngx.say(res)
+                ngx.say(status)
                 ngx.exit(ngx.HTTP_NOT_FOUND)
                 return
             end
@@ -92,7 +106,7 @@ vertical-align:top;
 th{
 border:1px solid #000;
 }
-table.files,table.log{
+table.files,table.log,table.blob-lines{
     width:100%;
     max-width:100%;
 }
@@ -102,8 +116,11 @@ table{
     font-family: monospace;
     font-size:14px;
 }
-table.tree td:not(:nth-child(2)), table.log td:not(:nth-child(4)){
-    max-width:1%;
+table.files td:first-child{
+    padding-right:calc(5px + 1em);
+}
+table.files td:not(:nth-child(2)), table.log td:not(:nth-child(4)){
+    width:1%;
     white-space:nowrap;
 }
 span.q{
@@ -136,6 +153,31 @@ background-color:#eee;
 padding:2.5px;
 border-radius:4px;
 }
+
+div.blob {
+    border:1px solid #858585;
+    overflow-x: auto;
+}
+table.blob-lines{
+    font-size:12px;
+    max-width:100%;
+}
+table.blob-lines td{
+    border:none;
+}
+table.blob-lines td:first-child{
+    text-align: right;
+    padding-left:20px;
+    user-select: none;
+    color:#858585;
+    max-width:1%;
+    white-space:nowrap;
+}
+table.blob-lines td:nth-child(2){
+    width:100%;
+    white-space:pre;
+}
+
 a{
 text-decoration:none;
 color: #0077aa;
@@ -144,12 +186,12 @@ a:hover{
     text-decoration:underline;
 }
 .home-banner h1 {
-    margin-top:50px;
+    margin-top:40px;
     margin-bottom:0;
 }
 .home-banner p {
     margin-top:8px;
-    margin-bottom:35px;
+    margin-bottom:30px;
 }
 .repo-section .name {
     margin-bottom:0;
@@ -164,7 +206,7 @@ a:hover{
     margin-top:10px;
 }
 hr {
-    margin: 25px 0;
+    margin: 20px 0;
 }
 </style>]])
 

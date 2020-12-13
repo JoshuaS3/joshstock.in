@@ -73,12 +73,37 @@ _M.markdown = function(input)
     end
 end
 
+_M.highlight = function(input, file_name)
+    local output
+    local status, err = pcall(function()
+        local t = os.tmpname()
+        io.open(t,"w"):close()
+        os.remove(t)
+        local tmpfile = t..file_name
+        local fp = io.open(tmpfile, "w")
+        fp:write(input)
+        fp:close()
+        local process = io.popen("highlight --stdout -f --failsafe --inline-css "..tmpfile, "r")
+        assert(process, "Error opening process")
+        output = process:read("*all")
+        process:close()
+        os.remove(tmpfile)
+    end)
+    if status then
+        return output
+    else
+        return string.format("Error in call: %s", err or command)
+    end
+end
+
 _M.html_sanitize = function(str)
-    return tostring(str):gsub("<", "&lt;")
-              :gsub(">", "&gt;")
-              :gsub("&", "&amp;")
-              :gsub("\"", "&quot;")
-              :gsub("'", "&#039;")
+    return tostring(
+        tostring(str):gsub("&", "&amp;")
+                     :gsub("<", "&lt;")
+                     :gsub(">", "&gt;")
+                     :gsub("\"", "&quot;")
+                     :gsub("'", "&#039;")
+    )
 end
 
 _M.iso8601 = function(iso8601)

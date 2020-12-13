@@ -1,10 +1,10 @@
--- request.lua
+-- parse_uri.lua
 -- URI parsing
 
 -- Copyright (c) 2020 Joshua 'joshuas3' Stockin
 -- <https://joshstock.in>
 
-local utils = require("utils")
+local utils = require("utils/utils")
 
 local _M = {}
 

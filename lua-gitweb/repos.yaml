@@ -1,5 +1,21 @@
 ---
 
+- name: ncurses-minesweeper
+  description: "Terminal game of Minesweeper, implemented in C with ncurses."
+  download:
+    - GIT git://joshstock.in/ncurses-minesweeper.git
+    - HTTPS https://git.joshstock.in/ncurses-minesweeper.git
+  urls:
+    - joshstock.in https://git.joshstock.in/ncurses-minesweeper
+    - GitHub https://github.com/JoshuaS3/ncurses-minesweeper
+    - GitLab https://gitlab.com/JoshuaS3/ncurses-minesweeper
+  location:
+    dev: "/home/josh/repos/ncurses-minesweeper/.git"
+    prod: "/home/git/ncurses-minesweeper.git"
+  specialfiles:
+    - README README.md
+    - LICENSE LICENSE
+
 - name: auto-plow
   description: "A wheelchair motor-propelled battery-powered ESP32-driven remote control snow plow."
   download:
@@ -32,22 +48,6 @@
     - README README.md
     - LICENSE LICENSE
 
-- name: ncurses-minesweeper
-  description: "Terminal game of Minesweeper, implemented in C with ncurses."
-  download:
-    - GIT git://joshstock.in/ncurses-minesweeper.git
-    - HTTPS https://git.joshstock.in/ncurses-minesweeper.git
-  urls:
-    - joshstock.in https://git.joshstock.in/ncurses-minesweeper
-    - GitHub https://github.com/JoshuaS3/ncurses-minesweeper
-    - GitLab https://gitlab.com/JoshuaS3/ncurses-minesweeper
-  location:
-    dev: "/home/josh/repos/ncurses-minesweeper/.git"
-    prod: "/home/git/ncurses-minesweeper.git"
-  specialfiles:
-    - README README.md
-    - LICENSE LICENSE
-
 - name: lognestmonster
   description: "A general-purpose single-header C logging library and parser for event-based logs."
   download:
@@ -63,3 +63,17 @@
   specialfiles:
     - README README.md
     - LICENSE LICENSE
+
+- name: dotfiles
+  description: "My personal dotfiles for Debian/Ubuntu."
+  download:
+    - GIT git://joshstock.in/dotfiles.git
+    - HTTPS https://git.joshstock.in/dotfiles.git
+  urls:
+    - joshstock.in https://git.joshstock.in/dotfiles
+    - GitHub https://github.com/JoshuaS3/dotfiles
+    - GitLab https://gitlab.com/JoshuaS3/dotfiles
+  location:
+    dev: "/home/josh/repos/dotfiles/.git"
+    prod: "/home/git/dotfiles.git"
+  specialfiles:

@@ -1,10 +1,10 @@
--- git_commands.lua
--- Index of git commands and parser functions used for the git HTTP site
+-- git/git_commands.lua
+-- git commands and parser functions
 
 -- Copyright (c) 2020 Joshua 'joshuas3' Stockin
 -- <https://joshstock.in>
 
-local utils = require("utils")
+local utils = require("utils/utils")
 
 local _M = {}
 
@@ -27,12 +27,19 @@ _M.get_head = function(repo_dir, head_name)
     head_name = head_name or "HEAD"
     local head = {}
     local name = string.trim(git(repo_dir, "rev-parse --abbrev-ref "..head_name))
-    local output = git(repo_dir, "show-ref --heads --tags "..name)
-    local a = string.split(string.trim(output), " ")
-    head.hash = a[1]
-    head.shorthash = string.sub(a[1], 1, 7)
-    head.full = a[2]
-    head.name = name
+    if name ~= "" then
+        local output = git(repo_dir, "show-ref --heads --tags "..name)
+        local a = string.split(string.trim(output), " ")
+        head.hash = a[1]
+        head.shorthash = string.sub(a[1], 1, 7)
+        head.full = a[2]
+        head.name = name
+    else -- no ref, default to hash
+        head.hash = head_name
+        head.shorthash = string.sub(head_name, 1, 7)
+        head.full = head_name
+        head.name = head_name
+    end
     return head
 end
 
@@ -101,18 +108,13 @@ _M.log = function(repo_dir, hash, file, number, skip, gpg)
     return commits
 end
 
-_M.number = function(repo_dir, hash)
-    hash = hash or "@"
-    local output = git(repo_dir, "rev-list --count "..hash.." --")
-end
-
 _M.commit = function(repo_dir, hash)
-    local commit = _M.log(repo_dir, hash, 1, 0)[1]
-    commit.number = _M.number(repo_dir, hash)
+    local commit = _M.log(repo_dir, hash, "", 1, 0, true)[1]
+    commit.count = _M.count(repo_dir, hash)
     return commit
 end
 
-_M.heads = function(repo_dir)
+local heads = function(repo_dir)
     local output = git(repo_dir, "show-ref --heads")
     local a = string.split(output, "\n")
     table.remove(a,#a)
@@ -129,7 +131,7 @@ _M.heads = function(repo_dir)
     return heads
 end
 
-_M.tags = function(repo_dir)
+local tags = function(repo_dir)
     local output = git(repo_dir, "show-ref --tags")
     local a = string.split(output, "\n")
     table.remove(a,#a)
@@ -148,12 +150,12 @@ end
 
 _M.list_refs = function(repo_dir)
     local refs = {}
-    refs.heads = _M.heads(repo_dir)
-    refs.tags = _M.tags(repo_dir)
+    refs.heads = heads(repo_dir)
+    refs.tags = tags(repo_dir)
     return refs
 end
 
-_M.list_dirs = function(repo_dir, hash, path)
+local list_dirs = function(repo_dir, hash, path)
     hash = hash or "@"
     path = path or ""
     local output = git(repo_dir, "ls-tree -d --name-only "..hash.." -- "..path)
@@ -162,7 +164,7 @@ _M.list_dirs = function(repo_dir, hash, path)
     return dirs
 end
 
-_M.list_all = function(repo_dir, hash, path)
+local list_all = function(repo_dir, hash, path)
     hash = hash or "@"
     path = path or ""
     local output = git(repo_dir, "ls-tree --name-only "..hash.." -- "..path)
@@ -174,8 +176,8 @@ end
 _M.list_tree = function(repo_dir, hash, path)
     hash = hash or "@"
     path = path or ""
-    local files = _M.list_all(repo_dir, hash, path)
-    local dirs = _M.list_dirs(repo_dir, hash, path)
+    local files = list_all(repo_dir, hash, path)
+    local dirs = list_dirs(repo_dir, hash, path)
     local ret = {}
     ret.dirs = {}
     ret.files = {}

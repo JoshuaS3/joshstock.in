@@ -181,11 +181,12 @@ N: No signature">GPG?</span>]]}
 
     -- Look for and render README if it exists
     for _, file in pairs(files.files) do
-        local l = file:lower()
+        local split = string.split(file, "/")
+        local l = split[#split]:lower()
         if l:match("^readme") then
             build:add("<h3>README</h3>")
-            local text = git.show_file(repo_dir, branch.name, path..file)
-            local s = file:len()
+            local text = git.show_file(repo_dir, branch.name, file)
+            local s = l:len()
             local body = builder:new()
             if string.sub(l, s-2, s) == ".md" then
                 body:add([[<div class="markdown">]]..utils.markdown(text).."</div>")

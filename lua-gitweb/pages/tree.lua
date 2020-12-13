@@ -5,11 +5,11 @@
 -- <https://joshstock.in>
 
 local utils = require("utils/utils")
-local git = require("git/git_commands")
+local git   = require("git/git_commands")
 
-local builder = require("utils/builder")
+local builder  = require("utils/builder")
 local tabulate = require("utils/tabulate")
-local nav = require("utils/nav")
+local nav      = require("utils/nav")
 
 local _M = function(repo, repo_dir, branch, path)
 

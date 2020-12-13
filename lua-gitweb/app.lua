@@ -4,11 +4,11 @@
 -- Copyright (c) 2020 Joshua 'joshuas3' Stockin
 -- <https://joshstock.in>
 
-local utils = require("utils/utils")
-local git = require("git/git_commands")
-local request = require("utils/parse_uri")
+local utils     = require("utils/utils")
+local git       = require("git/git_commands")
+local parse_uri = require("utils/parse_uri")
 
-local parsed_uri = request.parse_uri()
+local parsed_uri = parse_uri()
 local content
 
 if parsed_uri.repo == nil then
@@ -92,7 +92,7 @@ vertical-align:top;
 th{
 border:1px solid #000;
 }
-table.log,table.files,table.numberedlog{
+table.files,table.log{
     width:100%;
     max-width:100%;
 }
@@ -102,7 +102,7 @@ table{
     font-family: monospace;
     font-size:14px;
 }
-table.log td:not(:nth-child(3)), table.tree td:not(:nth-child(2)), table.numberedlog td:not(:nth-child(4)){
+table.tree td:not(:nth-child(2)), table.log td:not(:nth-child(4)){
     max-width:1%;
     white-space:nowrap;
 }

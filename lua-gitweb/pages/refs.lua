@@ -5,11 +5,11 @@
 -- <https://joshstock.in>
 
 local utils = require("utils/utils")
-local git = require("git/git_commands")
+local git   = require("git/git_commands")
 
-local builder = require("utils/builder")
+local builder  = require("utils/builder")
 local tabulate = require("utils/tabulate")
-local nav = require("utils/nav")
+local nav      = require("utils/nav")
 
 local _M = function(repo, repo_dir, branch)
     local build = builder:new()
@@ -60,10 +60,10 @@ local _M = function(repo, repo_dir, branch)
 
         for _, b in pairs(all_refs.heads) do
             table.insert(branches_table_data.rows, {
-                    b.name ~= branch.name and b.name or b.name.." <b>(HEAD)</b>",
-                    string.format([[<a href="/%s/tree/%s">%s</a>]], repo.name, b.name, b.full),
-                    string.format([[<a href="/%s/commit/%s">%s</a>]], repo.name, b.hash, b.shorthash)
-                })
+                b.name ~= branch.name and b.name or b.name.." <b>(HEAD)</b>",
+                string.format([[<a href="/%s/tree/%s">%s</a>]], repo.name, b.name, b.full),
+                string.format([[<a href="/%s/commit/%s">%s</a>]], repo.name, b.hash, b.shorthash)
+            })
         end
 
         build:add(tabulate(branches_table_data))
@@ -83,10 +83,10 @@ local _M = function(repo, repo_dir, branch)
         tags_table_data.rows = {}
         for _, t in pairs(all_refs.tags) do
             table.insert(tags_table_data.rows, {
-                    t.name ~= branch.name and t.name or t.name.." <b>(HEAD)</b>",
-                    string.format([[<a href="/%s/tree/%s">%s</a>]], repo.name, t.name, t.full),
-                    string.format([[<a href="/%s/commit/%s">%s</a>]], repo.name, t.hash, t.shorthash)
-                })
+                t.name ~= branch.name and t.name or t.name.." <b>(HEAD)</b>",
+                string.format([[<a href="/%s/tree/%s">%s</a>]], repo.name, t.name, t.full),
+                string.format([[<a href="/%s/commit/%s">%s</a>]], repo.name, t.hash, t.shorthash)
+            })
         end
 
         build:add(tabulate(tags_table_data))

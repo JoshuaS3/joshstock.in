@@ -6,9 +6,7 @@
 
 local utils = require("utils/utils")
 
-local _M = {}
-
-_M.parse_uri = function()
+local _M = function()
     local uri = ngx.var.uri
     local split = string.split(string.sub(uri,2),"/")
 

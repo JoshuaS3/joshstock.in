@@ -5,11 +5,11 @@
 -- <https://joshstock.in>
 
 local utils = require("utils/utils")
-local git = require("git/git_commands")
+local git   = require("git/git_commands")
 
-local builder = require("utils/builder")
+local builder  = require("utils/builder")
 local tabulate = require("utils/tabulate")
-local nav = require("utils/nav")
+local nav      = require("utils/nav")
 
 local _M = function(repos)
     local build = builder:new()
@@ -33,10 +33,10 @@ local _M = function(repos)
         section:add([[<p class="description">]]..repo.description.."</p>")
 
         -- Latest Commit table
-        section:add("<h3>Latest Commit</h3>")
-
         local branch = git.get_head(repo_dir)
         local commit = git.commit(repo_dir, branch.name)
+
+        section:add(string.format("<h3>Latest Commit (%s)</h3>", branch.name))
 
         local commits_table_data = {}
         commits_table_data.class = "log"

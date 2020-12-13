@@ -5,11 +5,11 @@
 -- <https://joshstock.in>
 
 local utils = require("utils/utils")
-local git = require("git/git_commands")
+local git   = require("git/git_commands")
 
-local builder = require("utils/builder")
+local builder  = require("utils/builder")
 local tabulate = require("utils/tabulate")
-local nav = require("utils/nav")
+local nav      = require("utils/nav")
 
 local _M = function(repo, repo_dir, branch, n, skip)
     n = tonumber(n or 20)
@@ -46,8 +46,8 @@ local _M = function(repo, repo_dir, branch, n, skip)
     build:add(nav(navlinks))
     build:add("</div>")
 
-    -- Latest Commit table
-    build:add("<h3>Commit</h3>")
+    -- Commits table
+    build:add("<h3>Commits</h3>")
 
     local commits_head = git.log(repo_dir, branch.name, path, n, skip, true)
 
@@ -103,7 +103,7 @@ local _M = function(repo, repo_dir, branch, n, skip)
 
     -- Build commit table
     local commits_table_data = {}
-    commits_table_data.class = "numberedlog"
+    commits_table_data.class = "log"
     commits_table_data.headers = {
         {"count",     [[<span class="q" title="Commit number/count">{#}</span>]]},
         {"timestamp", "Time"},
@@ -128,16 +128,16 @@ N: No signature">GPG?</span>]]}
 
     for i, commit in pairs(commits_head) do
         table.insert(commits_table_data.rows, {
-                git.count(repo_dir, commit.hash),
-                utils.iso8601(commit.timestamp),
-                string.format([[<a href="/%s/commit/%s">%s</a>]], repo.name, commit.hash, commit.shorthash),
-                utils.html_sanitize(commit.subject),
-                string.format([[<a href="mailto:%s">%s</a>]], commit.email, utils.html_sanitize(commit.author)),
-                commit.diff.num,
-                commit.diff.plus,
-                commit.diff.minus,
-                commit.gpggood
-            })
+            git.count(repo_dir, commit.hash),
+            utils.iso8601(commit.timestamp),
+            string.format([[<a href="/%s/commit/%s">%s</a>]], repo.name, commit.hash, commit.shorthash),
+            utils.html_sanitize(commit.subject),
+            string.format([[<a href="mailto:%s">%s</a>]], commit.email, utils.html_sanitize(commit.author)),
+            commit.diff.num,
+            commit.diff.plus,
+            commit.diff.minus,
+            commit.gpggood
+        })
     end
 
     -- Add

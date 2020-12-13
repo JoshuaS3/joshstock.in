@@ -4,7 +4,7 @@
 -- Copyright (c) 2020 Joshua 'joshuas3' Stockin
 -- <https://joshstock.in>
 
-require "git/git_commands"
+local git = require "git/git_commands"
 
 local pages_blob     = require "pages/blob"
 local pages_commit   = require "pages/commit"

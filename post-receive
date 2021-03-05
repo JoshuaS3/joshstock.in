@@ -20,6 +20,8 @@ do
 		sudo $TARGET/root/compile.py $HTML_OUT
 		echo "Copying nginx configuration"
 		sudo $TARGET/nginx/copynginx prod
+		echo "Copying resty-gitweb configuration"
+		sudo cp $TARGET/resty-gitweb.yaml /etc/resty-gitweb.yaml
 	else
 		echo "Ref $ref received. Doing nothing: only the ${BRANCH} branch may be deployed on this server."
 	fi

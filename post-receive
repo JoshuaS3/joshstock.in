@@ -20,8 +20,6 @@ do
 		sudo $TARGET/root/compile.py $HTML_OUT
 		echo "Copying nginx configuration"
 		sudo $TARGET/nginx/copynginx prod
-		echo "Installing git pager"
-		sudo $TARGET/gitpager/installgitpager prod
 	else
 		echo "Ref $ref received. Doing nothing: only the ${BRANCH} branch may be deployed on this server."
 	fi

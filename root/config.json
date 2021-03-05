@@ -43,19 +43,12 @@
 	],
 	"articles": [
 		{
-			"title": "Building a Remote Control Snow Plow",
-			"identifier": "building-a-remote-control-snow-plow",
-			"datestring": "MAR 23 2020",
-			"banner": "https://i.imgur.com/8Mfkbjl.png",
-			"description": "Planning, designing, building, and programming my two-years-and-going hobby project; a remote control robot that plows my driveway.",
-			"markdown": "resources/articles/snow-plow.md"
-		}, {
-			"title": "Writing My Website Stack",
-			"identifier": "creating-my-website-stack",
-			"datestring": "NOV 16 2019",
-			"banner": "/static/site-compile.png",
-			"description": "How to write a statically-hosted, self-deploying blog, using a custom template engine to generate content, and nginx to serve it.",
-			"markdown": "resources/articles/website-creation.md"
+			"title": "The blog works!",
+			"identifier": "first-blog-article",
+			"datestring": "MAR 2021",
+			"banner": "https://joshuas3.s3.amazonaws.com/images/esp32.jpg",
+			"description": "Test description for blog article",
+			"markdown": "resources/articles/first-article.md"
 		}
 	]
 }

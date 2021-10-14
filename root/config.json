@@ -46,7 +46,7 @@
 			"title": "The blog works!",
 			"identifier": "first-blog-article",
 			"datestring": "MAR 2021",
-			"banner": "https://joshuas3.s3.amazonaws.com/images/esp32.jpg",
+			"banner": "/static/images/esp32.jpg",
 			"description": "Test description for blog article",
 			"markdown": "resources/articles/first-article.md"
 		}

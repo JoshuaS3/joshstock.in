@@ -13,8 +13,9 @@ do
         git archive $newrev | tar -x -C /tmp/newrev
         mv /tmp/newrev/pre-receive $SCRIPTPATH/pre-receive
         rm -rf /tmp/newrev
-        echo "Running new pre-receive hook and exiting."
-        . $SCRIPTPATH/pre-receive $oldrev $newrev $ref
+        echo "Running new pre-receive hook."
+        echo "$oldrev $newrev $ref" | $SCRIPTPATH/pre-receive
+        echo "Done running new pre-receive hook."
         exit $?
     else
         echo "No pre-receive hook modification."

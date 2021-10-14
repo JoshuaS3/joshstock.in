@@ -16,7 +16,7 @@ do
         echo "Running new pre-receive hook and exiting."
         . $SCRIPTPATH/pre-receive $oldrev $newrev $ref
         exit $?
-    else;
+    else
         echo "No pre-receive hook modification."
     fi
     echo "Ref $ref received. Checking for post-receive hook modification..."
@@ -26,7 +26,7 @@ do
         git archive $newrev | tar -x -C /tmp/newrev
         mv /tmp/newrev/post-receive $SCRIPTPATH/post-receive
         rm -rf /tmp/newrev
-    else;
+    else
         echo "No post-receive hook modification."
     fi
 done

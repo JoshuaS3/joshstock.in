@@ -3,8 +3,8 @@
 # this file is automatically updated, although the pre-receive hook must be placed manually:
 # 'pre-receive' -> '.git/hooks/pre-receive'
 
-TARGET="/home/ubuntu/joshstock.in/deploy"
-GIT_DIR="/home/ubuntu/joshstock.in/project.git"
+TARGET="/home/ubuntu/joshstockin-deploy"
+GIT_DIR="/home/ubuntu/joshstockin.git"
 BRANCH="master"
 HTML_OUT="/var/www/html"
 
@@ -20,8 +20,10 @@ do
         sudo $TARGET/root/compile.py $HTML_OUT
         echo "Installing nginx configuration"
         sudo $TARGET/nginx/copynginx prod
-        echo "Installing resty-gitweb"
-		sudo install $TARGET/resty-gitweb.yaml /etc/resty-gitweb.yaml
+        echo "Installing resty-gitweb configuration"
+        sudo install $TARGET/resty-gitweb.yaml /etc/resty-gitweb.yaml
+        echo "Removing deploy directory"
+        rm -rf $TARGET
     else
         echo "Ref $ref received. Doing nothing: only the ${BRANCH} branch may be deployed on this server."
     fi

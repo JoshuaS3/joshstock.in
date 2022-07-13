@@ -64,6 +64,23 @@
     - README README.md
     - LICENSE LICENSE
 
+- name: s3-bsync
+  description: "Bidirectional syncing tool to sync local filesystem directories with S3 buckets."
+
+  download:
+    - GIT git://joshstock.in/s3-bsync.git
+    - HTTPS https://git.joshstock.in/s3-bsync.git
+  urls:
+    - joshstock.in https://git.joshstock.in/s3-bsync
+    - GitHub https://github.com/JoshuaS3/s3-bsync
+    - GitLab https://gitlab.com/JoshuaS3/s3-bsync
+  location:
+    dev: "/home/josh/repos/s3-bsync/.git"
+    prod: "/home/git/s3-bsync.git"
+  specialfiles:
+    - README README.md
+    - LICENSE LICENSE
+
 - name: lognestmonster
   description: "A general-purpose single-header C logging library and parser for event-based logs."
   download:

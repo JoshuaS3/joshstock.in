@@ -14,7 +14,7 @@
 			"title": "Josh Stockin",
 			"description": "The personal website, blog, and portfolio of Josh Stockin",
 			"priority": 1.0,
-			"file": "resources/pages/landing.html",
+			"file": "resources/pages/index.html",
 			"destination": "index.html"
 		}, {
 			"location": "/blog",

@@ -56,7 +56,6 @@ case $1 in
 esac
 
 MODE=$1
-PYTHON_COMMAND=
 
 # Determine Python interpreter to use
 echo "${LIGHTGRAY}Determining Python interpreter${RESTORE}"

@@ -24,6 +24,7 @@ YELLOW=$(echo -en '\033[00;33m')
 PURPLE=$(echo -en '\033[00;35m')
 LIGHTGRAY=$(echo -en '\033[00;37m')
 LRED=$(echo -en '\033[01;31m')
+LGREEN=$(echo -en '\033[01;32m')
 LYELLOW=$(echo -en '\033[01;33m')
 LBLUE=$(echo -en '\033[01;34m')
 LCYAN=$(echo -en '\033[01;36m')
@@ -36,8 +37,8 @@ function usage {
 }
 
 if [ "$EUID" -ne 0 ]; then
-	echo "error: must run as root"
-	usage
+    echo "error: must run as root"
+    usage
 fi
 
 # Handle argument input
@@ -116,6 +117,11 @@ function runcmd {
 
 echo "${LIGHTGRAY}Running HTML templating script${RESTORE}"
 runcmd $SCRIPT_SOURCE_DIR/root/compile.py $HTML_OUT
+if [ $? != 0 ]; then
+    echo "  ${RED}Error running templating script${RESTORE}"
+else
+    echo "  ${GREEN}Templating successful${RESTORE}"
+fi
 
 echo "${LIGHTGRAY}Installing nginx configuration${RESTORE}"
 
@@ -132,9 +138,25 @@ if [ ! -d $SCRIPT_SOURCE_DIR/nginx/$MODE ]; then
     exit 1
 fi
 runcmd cp -rv $SCRIPT_SOURCE_DIR/nginx/$MODE/* /etc/nginx/sites/joshstock.in
+echo "  ${GREEN}nginx configuration successfully installed${RESTORE}"
 
 echo "${LIGHTGRAY}Installing resty-gitweb configuration${RESTORE}"
 runcmd cp -v $SCRIPT_SOURCE_DIR/resty-gitweb.yaml /etc/resty-gitweb.yaml
+echo "  ${GREEN}resty-gitweb configuration successfully installed${RESTORE}"
 
-echo "${LIGHTGRAY}Reloading nginx${RESTORE}"
-service nginx reload
+if [[ ! $(lsof -i TCP:80) =~ "nginx" ]]; then
+    echo "${LIGHTGRAY}(Re)starting nginx${RESTORE}"
+    systemctl restart nginx
+else
+    echo "${LIGHTGRAY}Reloading nginx${RESTORE}"
+    systemctl reload nginx
+fi
+if [ $? != 0 ]; then
+    echo "  ${RED}nginx configuration not accepted${RESTORE}"
+    runcmd systemctl status nginx
+    exit 1
+else
+    echo "  ${GREEN}nginx loaded new configuration successfully${RESTORE}"
+    echo "${BOLD}${LGREEN}Successful deployment!${RESTORE}"
+    exit 0
+fi

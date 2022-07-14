@@ -1,0 +1,140 @@
+#!/usr/bin/env bash
+
+# Script variables
+PYTHON_MAJOR=3
+PYTHON_MINOR=7
+ACCEPTABLE_PYTHON_COMMANDS="python3 python3.10 python3.9 python3.8 python3.7 python"
+
+SCRIPT_SOURCE_DIR=$(dirname -- "${BASH_SOURCE[0]}")
+
+while read -r requirement
+do
+    REQUIRED_PIP_MODULES="$REQUIRED_PIP_MODULES $(sed -r "s/:.*//g" <<< $requirement)"
+    REQUIRED_PYTHON_MODULES="$REQUIRED_PYTHON_MODULES $(sed -r "s/.*://g" <<< $requirement)"
+done < $SCRIPT_SOURCE_DIR/requirements.txt
+
+# Plumbing
+set -o pipefail
+
+RESTORE=$(echo -en '\033[0m')
+STANDOUT=$(echo -en '\033[7m')
+RED=$(echo -en '\033[00;31m')
+GREEN=$(echo -en '\033[00;32m')
+YELLOW=$(echo -en '\033[00;33m')
+PURPLE=$(echo -en '\033[00;35m')
+LIGHTGRAY=$(echo -en '\033[00;37m')
+LRED=$(echo -en '\033[01;31m')
+LYELLOW=$(echo -en '\033[01;33m')
+LBLUE=$(echo -en '\033[01;34m')
+LCYAN=$(echo -en '\033[01;36m')
+
+
+
+function usage {
+    echo "Usage: $0 <prod|test>"
+    exit 0
+}
+
+if [ "$EUID" -ne 0 ]; then
+	echo "error: must run as root"
+	usage
+fi
+
+# Handle argument input
+case $1 in
+    h|help|?|-h|-help|-?|--h|--help|--?)
+        usage
+        ;;
+    prod)
+        ;;
+    test)
+        ;;
+    *)
+        usage
+        ;;
+esac
+
+MODE=$1
+PYTHON_COMMAND=
+
+# Determine Python interpreter to use
+echo "${LIGHTGRAY}Determining Python interpreter${RESTORE}"
+if [ -z $PYTHON_COMMAND ]; then
+    for COMMAND in $ACCEPTABLE_PYTHON_COMMANDS
+    do
+        if command -v $COMMAND &> /dev/null; then
+            PYTHON_COMMAND=$COMMAND
+            break
+        fi
+    done
+fi
+
+# Expand interpreter command, verify with `import sys` test instruction
+PYTHON_COMMAND=$(command -v $PYTHON_COMMAND)
+if [ -z $PYTHON_COMMAND ]; then
+    echo "  ${RED}Python interpreter not found${RESTORE}"
+    exit 1
+fi
+if [ -h "$PYTHON_COMMAND" ]; then
+    PYTHON_COMMAND=$(readlink -f $PYTHON_COMMAND)
+fi
+echo "  Trying interpreter [ ${LYELLOW}$PYTHON_COMMAND${RESTORE} ]"
+if ! $PYTHON_COMMAND -c "import sys"; then
+    echo "  ${RED}Executable is not Python${RESTORE}"
+    exit 1
+fi
+
+# Verifying Python version
+echo "${LIGHTGRAY}Checking Python version${RESTORE} [ needs ${LIGHTGRAY}>=$PYTHON_MAJOR.$PYTHON_MINOR${RESTORE} ]"
+PYTHON_VERSION_STRING=$($PYTHON_COMMAND -c "print('.'.join([str(a) for a in __import__('sys').version_info[:3]]))")
+if ! $PYTHON_COMMAND -c "import sys;exit(not(sys.version_info.major==$PYTHON_MAJOR and sys.version_info.minor>=$PYTHON_MINOR))"; then
+    echo "  ${RED}Python version must be ${RESTORE}[ ${LCYAN}>=$PYTHON_MAJOR.$PYTHON_MINOR${RESTORE} ]${RED}."\
+                 "Installed is ${RESTORE}[ ${LCYAN}$PYTHON_VERSION_STRING${RESTORE} ]"
+    exit 1
+fi
+echo "  Version [ ${LCYAN}$PYTHON_VERSION_STRING${RESTORE} ] acceptable"
+
+# Verifying required modules are installed
+echo "${LIGHTGRAY}Checking Python modules installed${RESTORE}"
+for MODULE in $(seq 1 $(wc -w <<< $REQUIRED_PIP_MODULES))
+do
+    PIP_MODULE=$(awk -v N=$MODULE '{print $N}' <<< "$REQUIRED_PIP_MODULES")
+    PYTHON_MODULE=$(awk -v N=$MODULE '{print $N}' <<< "$REQUIRED_PYTHON_MODULES")
+    if ! $PYTHON_COMMAND -c "import $PYTHON_MODULE" &> /dev/null; then
+        echo "  ${RED}Required Python module ${RESTORE}[ ${LBLUE}$PYTHON_MODULE${RESTORE} ] ${RED}not found${RESTORE}"
+        echo "  Install with ${PURPLE}$PYTHON_COMMAND -m pip install $PIP_MODULE${RESTORE}"
+        exit 1
+    fi
+    echo "  Module [ ${LBLUE}$PYTHON_MODULE${RESTORE} ] found"
+done
+echo "  ${GREEN}All required modules found${RESTORE}"
+
+function runcmd {
+    "$@" 2>&1 | sed 's/^/  /';
+}
+
+
+echo "${LIGHTGRAY}Running HTML templating script${RESTORE}"
+runcmd $SCRIPT_SOURCE_DIR/root/compile.py $HTML_OUT
+
+echo "${LIGHTGRAY}Installing nginx configuration${RESTORE}"
+
+if [ ! -f $SCRIPT_SOURCE_DIR/nginx/nginx.conf ]; then
+    echo "  ${RED}Core configuration file ${RESTORE}[ ${LBLUE}$SCRIPT_SOURCE_DIR/nginx/nginx.conf${RESTORE} ] ${RED}not found${RESTORE}"
+    exit 1
+fi
+runcmd cp -v $SCRIPT_SOURCE_DIR/nginx/nginx.conf /etc/nginx/nginx.conf
+
+runcmd rm -rv /etc/nginx/sites/joshstock.in
+runcmd mkdir -p /etc/nginx/sites/joshstock.in
+if [ ! -d $SCRIPT_SOURCE_DIR/nginx/$MODE ]; then
+    echo "  ${RED}Directory ${RESTORE}[ ${LBLUE}$SCRIPT_SOURCE_DIR/nginx/$MODE${RESTORE} ] ${RED}not found${RESTORE}"
+    exit 1
+fi
+runcmd cp -rv $SCRIPT_SOURCE_DIR/nginx/$MODE/* /etc/nginx/sites/joshstock.in
+
+echo "${LIGHTGRAY}Installing resty-gitweb configuration${RESTORE}"
+runcmd cp -v $SCRIPT_SOURCE_DIR/resty-gitweb.yaml /etc/resty-gitweb.yaml
+
+echo "${LIGHTGRAY}Reloading nginx${RESTORE}"
+service nginx reload

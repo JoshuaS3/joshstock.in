@@ -118,6 +118,7 @@ echo "${LIGHTGRAY}Running HTML templating script${RESTORE}"
 runcmd $SCRIPT_SOURCE_DIR/root/compile.py $HTML_OUT
 if [ $? != 0 ]; then
     echo "  ${RED}Error running templating script${RESTORE}"
+    exit 1
 else
     echo "  ${GREEN}Templating successful${RESTORE}"
 fi

@@ -183,7 +183,7 @@ def template(output_path: str):
 
 if __name__ == "__main__":
     if len(sys.argv) < 2:
-        FOLDER_OUT = "/var/www/html"
+        FOLDER_OUT = "/var/www/josh"
     else:
         FOLDER_OUT = sys.argv[1]
     print(f"[main] compile.py starting")

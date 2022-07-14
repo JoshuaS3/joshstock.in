@@ -16,7 +16,7 @@ do
         mkdir $TARGET
         git --work-tree=$TARGET --git-dir=$GIT_DIR checkout -f $BRANCH
         echo "Running deploy script"
-        $TARGET/deploy prod
+        sudo $TARGET/deploy prod
         echo "Removing deploy directory"
         rm -rf $TARGET
     else

@@ -102,8 +102,12 @@ do
     PYTHON_MODULE=$(awk -v N=$MODULE '{print $N}' <<< "$REQUIRED_PYTHON_MODULES")
     if ! $PYTHON_COMMAND -c "import $PYTHON_MODULE" &> /dev/null; then
         echo "  ${RED}Required Python module ${RESTORE}[ ${LBLUE}$PYTHON_MODULE${RESTORE} ] ${RED}not found${RESTORE}"
-        echo "  Install with ${PURPLE}$PYTHON_COMMAND -m pip install $PIP_MODULE${RESTORE}"
-        exit 1
+        $PYTHON_COMMAND -m pip install $PIP_MODULE
+        if ! $PYTHON_COMMAND -c "import $PYTHON_MODULE" &> /dev/null; then
+            echo "  ${RED}Required Python module ${RESTORE}[ ${LBLUE}$PYTHON_MODULE${RESTORE} ] ${RED}not found${RESTORE}"
+            exit 1
+        fi
+        #echo "  Install with ${PURPLE}$PYTHON_COMMAND -m pip install $PIP_MODULE${RESTORE}"
     fi
     echo "  Module [ ${LBLUE}$PYTHON_MODULE${RESTORE} ] found"
 done

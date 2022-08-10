@@ -15,20 +15,8 @@ $meta
 				$content
 				<p><a href="$permalink">Article Permalink</a></p>
 				<script type="text/javascript" src="/static/banner_scroll.js"></script>
-				<div id="disqus_thread"></div>
-				<script>
-				var disqus_config = function () {
-					this.page.url = "https://joshstock.in$permalink";
-					this.page.identifier = "https://joshstock.in$permalink";
-				};
-				(function() {
-				var d = document, s = d.createElement('script');
-				s.src = 'https://joshstockin.disqus.com/embed.js';
-				s.setAttribute('data-timestamp', +new Date());
-				(d.head || d.body).appendChild(s);
-				})();
-				</script>
-				<noscript><p>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</p></a></noscript>
+				<script defer src="https://comments.joshstock.in/js/commento.js"></script>
+				<div id="commento"></div>
 $footer
 			</div>
 		</div>

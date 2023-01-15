@@ -24,7 +24,7 @@ def run(data):
             else "https://joshstock.in/static/images/river.jpg",
         ),
         hg.META(property="og:url", content=f"https://joshstock.in{data.link}"),
-        hg.META(property="twitter:card", content="summary"),
+        hg.META(property="twitter:card", content="summary_large_image"),
     ]
 
     return contents

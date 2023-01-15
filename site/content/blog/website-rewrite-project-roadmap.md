@@ -38,12 +38,12 @@ I can also write HTML in the Markdown, which lets me nicely embed media in
 I'll do a better writeup on the template engine in the [Projects](/projects)
 section someday.
 
-<figure class="float-left heading-aligned">
+## Roadmap
+
+<figure class="float-left">
     <video class="medium" src="/static/videos/river.mp4" controls></video>
     <figcaption>river.mp4: Kankakee River State Park. Example embedded media.</figcaption>
 </figure>
-
-## Roadmap
 
 There are still a few things I need to fix or add to the site—in particular:
 

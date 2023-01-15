@@ -1,0 +1,86 @@
+// themes/default.scss
+
+$background-color: #ffffff;
+$text-color: #252525;
+
+$link-color: #0077a4;
+$link-visited-color: #a06780;
+
+$caption-color: #656565;
+
+$border-color: #d3d3d3;
+$blockquote-background-color: #fafafa;
+
+$code-background-color: #f8f8f8;
+$code-text-color: #ff6000;
+
+html {
+    & {
+        --background-color: #{$background-color};
+        --text-color: #{$text-color};
+        --link-color: #{$link-color};
+        --link-visited-color: #{$link-visited-color};
+        --caption-color: #{$caption-color};
+        --border-color: #{$border-color};
+        --blockquote-background-color: #{$blockquote-background-color};
+        --code-background-color: #{$code-background-color};
+        --code-text-color: #{darken($code-text-color, 5%)};
+
+        @import 'highlight_default';
+
+        img.darkmodetoggle {
+            content:url(/static/svg/sun.svg);
+        }
+    }
+
+    &.dark {
+        --background-color: #{$text-color}; 
+        --text-color: #{$background-color};
+        --link-color: #{hsl(hue($link-color), saturation($link-color)+30%, 70%)};
+        --link-visited-color: #{hsl(hue($link-visited-color), saturation($link-visited-color)+30%, 70%)};
+        --caption-color: #{invert($caption-color)};
+        --border-color: #{darken($border-color, 50%)};
+        --blockquote-background-color: #{darken($blockquote-background-color, 80%)};
+        --code-background-color: #2e2e2e;
+        --code-text-color: #{$code-text-color};
+
+        @import 'highlight_dark';
+
+        img.svg.icon {
+            filter: invert(100%);
+        }
+        img.darkmodetoggle {
+            content:url(/static/svg/moon.svg);
+        }
+        div.codehilite {
+            background-color: #303030;
+        }
+
+        #commento {
+            * {
+                color: var(--text-color) !important;
+            }
+            a {
+                color: var(--link-color) !important;
+            }
+            a:visited {
+                color: var(--link-visited-color) !important;
+            }
+            textarea, .commento-login-box {
+                background-color: #303030 !important;
+            }
+            .commento-email {
+                &, input, button {
+                    background-color: #404040 !important;
+                }
+            }
+            .commento-option-button {
+                background: var(--text-color);
+            }
+            .commento-card {
+                border-top: 1px solid #303030;
+                background: none !important;
+            }
+        }
+    }
+}

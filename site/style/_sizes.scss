@@ -1,0 +1,19 @@
+$base-font-size: 16px;
+$figure-font-size: 14px;
+
+$base-banner-height: 20vh;
+
+$page-max-width: 1000px;
+
+$topbar-max-width: 1000px;
+$topbar-font-size: 24px;
+$topbar-font-size-reduced: 20px;
+
+$content-first-line-size: $base-font-size*1.5;
+$content-image-float-offset: -100px;
+$content-image-small-height: 320px;
+$content-image-medium-height: 480px;
+
+$figure-compress-width: 1300px;
+$page-compress-width: $topbar-max-width + 32;
+$topbar-reduce-width: 850px;

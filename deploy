@@ -4,11 +4,16 @@
 PYTHON_MAJOR=3
 PYTHON_MINOR=7
 ACCEPTABLE_PYTHON_COMMANDS="python3 python3.10 python3.9 python3.8 python3.7 python"
+PYTHON_COMMAND=
 
 SCRIPT_SOURCE_DIR=$(dirname -- "${BASH_SOURCE[0]}")
 
+# If pip modules are named differently from their internal Python modules, the
+# requirements.txt file will use the format `pip_name:py_name` per line for
+# each requirement.
 while read -r requirement
 do
+    [[ $requirement =~ ^#.* ]] && continue # Ignore comment line
     REQUIRED_PIP_MODULES="$REQUIRED_PIP_MODULES $(sed -r "s/:.*//g" <<< $requirement)"
     REQUIRED_PYTHON_MODULES="$REQUIRED_PYTHON_MODULES $(sed -r "s/.*://g" <<< $requirement)"
 done < $SCRIPT_SOURCE_DIR/requirements.txt
@@ -32,7 +37,7 @@ LCYAN=$(echo -en '\033[01;36m')
 
 
 function usage {
-    echo "Usage: $0 <prod|test>"
+    echo "Usage: sudo $0 <prod|test>"
     exit 0
 }
 
@@ -43,9 +48,6 @@ fi
 
 # Handle argument input
 case $1 in
-    h|help|?|-h|-help|-?|--h|--help|--?)
-        usage
-        ;;
     prod)
         ;;
     test)
@@ -57,7 +59,8 @@ esac
 
 MODE=$1
 
-# Determine Python interpreter to use
+# Determine Python interpreter to use. Takes from list of acceptable
+# interpreters if user didn't supply one.
 echo "${LIGHTGRAY}Determining Python interpreter${RESTORE}"
 if [ -z $PYTHON_COMMAND ]; then
     for COMMAND in $ACCEPTABLE_PYTHON_COMMANDS
@@ -72,19 +75,19 @@ fi
 # Expand interpreter command, verify with `import sys` test instruction
 PYTHON_COMMAND=$(command -v $PYTHON_COMMAND)
 if [ -z $PYTHON_COMMAND ]; then
-    echo "  ${RED}Python interpreter not found${RESTORE}"
+    echo "  ${BOLD}${LRED}Python interpreter not found${RESTORE}"
     exit 1
 fi
 if [ -h "$PYTHON_COMMAND" ]; then
-    PYTHON_COMMAND=$(readlink -f $PYTHON_COMMAND)
+    PYTHON_COMMAND=$(readlink -f $PYTHON_COMMAND) # Expand symlink, if "python3"
 fi
 echo "  Trying interpreter [ ${LYELLOW}$PYTHON_COMMAND${RESTORE} ]"
 if ! $PYTHON_COMMAND -c "import sys"; then
-    echo "  ${RED}Executable is not Python${RESTORE}"
+    echo "  ${BOLD}${LRED}Executable is not a Python interpreter${RESTORE}"
     exit 1
 fi
 
-# Verifying Python version
+# Verifying installed Python version meets minimum requirements
 echo "${LIGHTGRAY}Checking Python version${RESTORE} [ needs ${LIGHTGRAY}>=$PYTHON_MAJOR.$PYTHON_MINOR${RESTORE} ]"
 PYTHON_VERSION_STRING=$($PYTHON_COMMAND -c "print('.'.join([str(a) for a in __import__('sys').version_info[:3]]))")
 if ! $PYTHON_COMMAND -c "import sys;exit(not(sys.version_info.major==$PYTHON_MAJOR and sys.version_info.minor>=$PYTHON_MINOR))"; then
@@ -101,53 +104,65 @@ do
     PIP_MODULE=$(awk -v N=$MODULE '{print $N}' <<< "$REQUIRED_PIP_MODULES")
     PYTHON_MODULE=$(awk -v N=$MODULE '{print $N}' <<< "$REQUIRED_PYTHON_MODULES")
     if ! $PYTHON_COMMAND -c "import $PYTHON_MODULE" &> /dev/null; then
-        echo "  ${RED}Required Python module ${RESTORE}[ ${LBLUE}$PYTHON_MODULE${RESTORE} ] ${RED}not found${RESTORE}"
+        echo "  ${BOLD}${LRED}Required Python module ${RESTORE}[ ${BOLD}${LBLUE}$PYTHON_MODULE${RESTORE} ] ${BOLD}${LRED}not found.${RESTORE}"
+        echo "  Attempting install with ${PURPLE}$PYTHON_COMMAND -m pip install $PIP_MODULE${RESTORE}"
         $PYTHON_COMMAND -m pip install $PIP_MODULE
         if ! $PYTHON_COMMAND -c "import $PYTHON_MODULE" &> /dev/null; then
-            echo "  ${RED}Required Python module ${RESTORE}[ ${LBLUE}$PYTHON_MODULE${RESTORE} ] ${RED}not found${RESTORE}"
+            echo "  ${BOLD}${LRED}Required Python module ${RESTORE}[ ${BOLD}${LBLUE}$PYTHON_MODULE${RESTORE} ] ${BOLD}${LRED}not found${RESTORE}"
             exit 1
         fi
-        #echo "  Install with ${PURPLE}$PYTHON_COMMAND -m pip install $PIP_MODULE${RESTORE}"
     fi
     echo "  Module [ ${LBLUE}$PYTHON_MODULE${RESTORE} ] found"
 done
 echo "  ${GREEN}All required modules found${RESTORE}"
 
-function runcmd {
+function runcmd { # Indents program output before passing to stdout
     "$@" 2>&1 | sed 's/^/  /';
 }
 
 
+# Run templating engine for static site content
 echo "${LIGHTGRAY}Running HTML templating script${RESTORE}"
-runcmd $SCRIPT_SOURCE_DIR/root/compile.py $HTML_OUT
+runcmd $SCRIPT_SOURCE_DIR/build.py $HTML_OUT
 if [ $? != 0 ]; then
-    echo "  ${RED}Error running templating script${RESTORE}"
+    echo "  ${BOLD}${LRED}Error running templating script${RESTORE}"
     exit 1
 else
     echo "  ${GREEN}Templating successful${RESTORE}"
 fi
 
-echo "${LIGHTGRAY}Installing nginx configuration${RESTORE}"
+echo "${LIGHTGRAY}Copying templated files${RESTORE}"
+runcmd rm -rv /var/www/josh
+runcmd mkdir -p /var/www/josh
+runcmd cp -rv $SCRIPT_SOURCE_DIR/build/* /var/www/josh
+echo "  ${GREEN}Files copied successfully${RESTORE}"
 
+# Install nginx configuration
+echo "${LIGHTGRAY}Installing nginx configuration${RESTORE}"
 if [ ! -f $SCRIPT_SOURCE_DIR/nginx/nginx.conf ]; then
-    echo "  ${RED}Core configuration file ${RESTORE}[ ${LBLUE}$SCRIPT_SOURCE_DIR/nginx/nginx.conf${RESTORE} ] ${RED}not found${RESTORE}"
+    echo "  ${BOLD}${LRED}Core configuration file ${RESTORE}[ ${BOLD}${LBLUE}$SCRIPT_SOURCE_DIR/nginx/nginx.conf${RESTORE} ] ${BOLD}${LRED}not found${RESTORE}"
     exit 1
 fi
 runcmd cp -v $SCRIPT_SOURCE_DIR/nginx/nginx.conf /etc/nginx/nginx.conf
-
-runcmd rm -rv /etc/nginx/sites/joshstock.in
-runcmd mkdir -p /etc/nginx/sites/joshstock.in
 if [ ! -d $SCRIPT_SOURCE_DIR/nginx/$MODE ]; then
-    echo "  ${RED}Directory ${RESTORE}[ ${LBLUE}$SCRIPT_SOURCE_DIR/nginx/$MODE${RESTORE} ] ${RED}not found${RESTORE}"
+    echo "  ${BOLD}${LRED}Directory ${RESTORE}[ ${BOLD}${LBLUE}$SCRIPT_SOURCE_DIR/nginx/$MODE${RESTORE} ] ${BOLD}${LRED}not found${RESTORE}"
     exit 1
 fi
+runcmd rm -rv /etc/nginx/sites/joshstock.in
+runcmd mkdir -p /etc/nginx/sites/joshstock.in
 runcmd cp -rv $SCRIPT_SOURCE_DIR/nginx/$MODE/* /etc/nginx/sites/joshstock.in
 echo "  ${GREEN}nginx configuration successfully installed${RESTORE}"
 
+# Install configuration for resty-gitweb subdomain
 echo "${LIGHTGRAY}Installing resty-gitweb configuration${RESTORE}"
+if [ ! -f $SCRIPT_SOURCE_DIR/resty-gitweb.yaml ]; then
+    echo "  ${BOLD}${LRED}Core configuration file ${RESTORE}[ ${BOLD}${LBLUE}$SCRIPT_SOURCE_DIR/resty-gitweb.yaml${RESTORE} ] ${BOLD}${LRED}not found${RESTORE}"
+    exit 1
+fi
 runcmd cp -v $SCRIPT_SOURCE_DIR/resty-gitweb.yaml /etc/resty-gitweb.yaml
 echo "  ${GREEN}resty-gitweb configuration successfully installed${RESTORE}"
 
+# Reload nginx
 if [[ ! $(lsof -i TCP:80) =~ "nginx" ]]; then
     echo "${LIGHTGRAY}(Re)starting nginx${RESTORE}"
     systemctl restart nginx
@@ -156,11 +171,11 @@ else
     systemctl reload nginx
 fi
 if [ $? != 0 ]; then
-    echo "  ${RED}nginx configuration not accepted${RESTORE}"
+    echo "${BOLD}${LRED}nginx configuration not accepted or nginx could not be restarted. Dumping systemctl status...${RESTORE}"
     runcmd systemctl status nginx
     exit 1
 else
-    echo "  ${GREEN}nginx loaded new configuration successfully${RESTORE}"
+    echo "${GREEN}nginx loaded new configuration successfully${RESTORE}"
     echo "${BOLD}${LGREEN}Successful deployment!${RESTORE}"
     exit 0
 fi

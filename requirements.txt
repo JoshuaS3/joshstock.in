@@ -1,2 +1,7 @@
+# Format `pip_name:python_name`
+htmlgenerator
+libsass:sass
 markdown2
+feedgen
+Pygments:pygments
 readtime

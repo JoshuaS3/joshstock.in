@@ -76,8 +76,8 @@ As of 01/2023, current projects include:
 
 Progress on each is sporadic considering I'm a full time student. At some point
 I wish to study graphics programming, procedural generation, and
-geology/climate simulation. Once I've rewritten my website I'll populate the
-blog with technical writeups on these projects.
+geology/climate simulation. Eventually I'll populate the [projects](/projects)
+page with more info about these.
 
 Oh, and I'm also a survivor of [severe scoliosis](/static/images/scoliosis.png).
 

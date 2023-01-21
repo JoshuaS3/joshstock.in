@@ -6,7 +6,6 @@
 TARGET="/home/ubuntu/joshstockin-deploy"
 GIT_DIR="/home/ubuntu/joshstockin.git"
 BRANCH="master"
-HTML_OUT="/var/www/html"
 
 while read oldrev newrev ref
 do
@@ -18,7 +17,7 @@ do
         echo "Running deploy script"
         sudo $TARGET/deploy prod
         echo "Removing deploy directory"
-        rm -rf $TARGET
+        sudo rm -rf $TARGET
     else
         echo "Ref $ref received. Doing nothing: only the ${BRANCH} branch may be deployed on this server."
     fi

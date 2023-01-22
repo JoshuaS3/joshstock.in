@@ -327,6 +327,8 @@ div.content-container {
         }
 
         img, video {
+            position: relative;
+            z-index: 3;
             &.inline.svg {
                 height: 1em;
                 vertical-align: middle;

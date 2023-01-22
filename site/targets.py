@@ -39,6 +39,8 @@ sitemap_urlset = sitemap_root.createElementNS("http://www.sitemap.org/schemas/si
 sitemap_urlset.setAttribute("xmlns", sitemap_urlset.namespaceURI)
 sitemap_root.appendChild(sitemap_urlset)
 
+site_footer = generate("footer")
+
 def add_sitemap_url(url):
     url_obj = sitemap_root.createElement("url")
     loc_obj = sitemap_root.createElement("loc")
@@ -96,7 +98,7 @@ def template() -> {str: str}:
                     hg.DIV(
                         hg.DIV(hg.mark_safe(content_html), _class="content-body"),
                         hg.DIV(_class="vfill"),
-                        generate("footer"),
+                        site_footer,
                         _class="content-container",
                     ),
                     onscroll="scroll()",
@@ -135,7 +137,7 @@ def template() -> {str: str}:
                             *generate("blog.article", page_data), _class="content-body"
                         ),
                         hg.DIV(_class="vfill"),
-                        generate("footer"),
+                        site_footer,
                         _class="content-container",
                     ),
                     onscroll="scroll()",
@@ -172,7 +174,7 @@ def template() -> {str: str}:
                     _class="content-body",
                 ),
                 hg.DIV(_class="vfill"),
-                generate("footer"),
+                site_footer,
                 _class="content-container",
             ),
             onscroll="scroll()",

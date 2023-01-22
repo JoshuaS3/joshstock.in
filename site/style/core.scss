@@ -474,5 +474,8 @@ div.content-container {
         text-align: center;
         border-top: 2px solid var(--border-color);
         padding-top: 16px;
+        &>p {
+            margin: 0;
+        }
     }
 }

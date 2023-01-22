@@ -8,7 +8,7 @@ def run(data=None):
     footer = hg.FOOTER(
         hg.P(
             hg.mark_safe(
-                f"https://joshstock.in &copy; {datetime.date.today().year} Joshua Stockin"
+                f"joshstock.in &copy; {datetime.date.today().year} Josh Stockin"
             ),
         ),
         hg.P(
@@ -19,7 +19,7 @@ def run(data=None):
             " / ",
             hg.A("stockin2@illinois.edu", href="mailto:stockin2@illinois.edu"),
             " / ",
-            hg.CODE("joshuas3#", hg.I("9641")),
+            hg.CODE("joshuas3", hg.I("#9641")),
         ),
         hg.FIGCAPTION(
             hg.I(

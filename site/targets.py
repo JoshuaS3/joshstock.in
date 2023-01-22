@@ -4,6 +4,7 @@
 import os
 import html
 from datetime import datetime, timezone, timedelta
+from xml.dom import minidom
 
 import markdown2
 import htmlgenerator as hg
@@ -32,6 +33,19 @@ GENERATORS = [
 ]
 
 generate = load_generators(GENERATORS_MODULE, GENERATORS)
+
+sitemap_root = minidom.Document()
+sitemap_urlset = sitemap_root.createElementNS("http://www.sitemap.org/schemas/sitemap/0.9", "urlset")
+sitemap_urlset.setAttribute("xmlns", sitemap_urlset.namespaceURI)
+sitemap_root.appendChild(sitemap_urlset)
+
+def add_sitemap_url(url):
+    url_obj = sitemap_root.createElement("url")
+    loc_obj = sitemap_root.createElement("loc")
+    loc_obj.appendChild(sitemap_root.createTextNode(url))
+    url_obj.appendChild(loc_obj)
+    sitemap_urlset.appendChild(url_obj)
+
 
 # Site template implementation; returns dict {filename: data}
 def template() -> {str: str}:
@@ -89,6 +103,10 @@ def template() -> {str: str}:
                 ),
             )
             files[page_data.index] = hg.render(page_generator, {}).encode("utf-8")
+            if page_data.index != "index.html":
+                add_sitemap_url("/" + page_data.index.rsplit(".html")[0])
+            else:
+                add_sitemap_url("/")
 
         elif page_data.type == "article":  # Blog article handling
             page_data.readtime = readtime.of_html(content_html, wpm=150)
@@ -161,6 +179,7 @@ def template() -> {str: str}:
         ),
     )
     files["blog.html"] = hg.render(blog_page_generator, {}).encode("utf-8")
+    add_sitemap_url("/blog")
 
     # Feeds
     files["atom.xml"] = fg.atom_str(pretty=True)
@@ -190,5 +209,7 @@ def template() -> {str: str}:
         files[
             os.path.join("static", os.path.relpath(static_file, STATIC_DIRECTORY))
         ] = data
+
+    files["sitemap.xml"] = sitemap_root.toprettyxml(indent="\t").encode("utf-8")
 
     return files

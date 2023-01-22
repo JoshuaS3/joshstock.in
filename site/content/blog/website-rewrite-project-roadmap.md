@@ -74,7 +74,7 @@ And on populating the **projects** page:
 
 Here's the full Kanboard project for this website:
 
-<iframe class="full" src="https://kanboard.joshstock.in/?controller=BoardViewController&action=readonly&token=3a343d4fa775266f953482d9dc6a8ce7c6fe299a0490653024a74ee85a8d"></iframe>
+<iframe class="full" src="/u/kanban-joshstockin"></iframe>
 
 As much as I want to work on these projects, I am however a full-time
 engineering student interning during summers and, while I try my best, I can't

@@ -76,6 +76,6 @@ Here's the full Kanboard project for this website:
 
 <iframe class="full" src="/u/kanban-joshstockin"></iframe>
 
-As much as I want to work on these projects, I am however a full-time
-engineering student interning during summers and, while I try my best, I can't
-commit any regular amount of time to writing or working on these projects.
+As much as I want to work on these projects, I am a full-time engineering
+student interning during summers and, while I try my best, I can't commit any
+regular amount of time to writing or working on these projects.

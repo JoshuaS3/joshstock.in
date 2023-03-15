@@ -115,18 +115,8 @@ def template() -> {str: str}:
             page_data.thumbnail = page_data.banner_image
             page_data.link = "/blog/" + page_data.identifier
             page_data.links = page_data.links or {}
-            articles_list += [generate("blog.listing", page_data)]
+            articles_list += [page_data]
             page_data.content = content_html
-
-            fe = fg.add_entry()
-            fe.id("https://joshstock.in/blog/" + page_data.identifier)
-            fe.author({"name": "Josh Stockin", "email": "josh@joshstock.in", "uri": "https://joshstock.in"})
-            fe.title(page_data.title)
-            fe.summary(page_data.description + " / https://joshstock.in/blog/" + page_data.identifier)
-            datetime_pub = datetime.strptime(page_data.datestring, "%Y-%m-%d").replace(tzinfo=timezone(-timedelta(hours=6)))
-            fe.published(datetime_pub)
-            fe.updated(datetime_pub)
-            fe.link(href="https://joshstock.in/blog/" + page_data.identifier)
 
             page_generator = hg.HTML(
                 generate("head.head", page_data),
@@ -147,6 +137,22 @@ def template() -> {str: str}:
             files["blog/" + page_data.identifier + ".html"] = hg.render(
                 page_generator, {}
             ).encode("utf-8")
+
+
+    # Sort articles list by descending datestring
+    articles_list = sorted(articles_list, key=lambda x: x.datestring, reverse=True)
+
+    # Create article entries for feed generator
+    for page_data in articles_list:
+        fe = fg.add_entry()
+        fe.id("https://joshstock.in/blog/" + page_data.identifier)
+        fe.author({"name": "Josh Stockin", "email": "josh@joshstock.in", "uri": "https://joshstock.in"})
+        fe.title(page_data.title)
+        fe.summary(page_data.description + " / https://joshstock.in/blog/" + page_data.identifier)
+        datetime_pub = datetime.strptime(page_data.datestring, "%Y-%m-%d").replace(tzinfo=timezone(-timedelta(hours=6)))
+        fe.published(datetime_pub)
+        fe.updated(datetime_pub)
+        fe.link(href="https://joshstock.in/blog/" + page_data.identifier)
 
     # Create blog index page
     blog_page_data = namespace(
@@ -170,7 +176,7 @@ def template() -> {str: str}:
                             hg.SPAN("[", hg.A("RSS feed", href="/rss"), "]", style="font-size: 0.75em; color: var(--caption-color)")
                         )
                     ),
-                    *articles_list,
+                    *[generate("blog.listing", x) for x in articles_list],
                     _class="content-body",
                 ),
                 hg.DIV(_class="vfill"),

@@ -18,8 +18,6 @@ def run(data=None):
             hg.A("josh@joshstock.in", href="mailto:josh@joshstock.in"),
             " / ",
             hg.A("stockin2@illinois.edu", href="mailto:stockin2@illinois.edu"),
-            " / ",
-            hg.CODE("joshuas3", hg.I("#9641")),
         ),
         hg.FIGCAPTION(
             hg.I(

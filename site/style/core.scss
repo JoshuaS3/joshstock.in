@@ -14,6 +14,7 @@ body {
     flex-flow: column;
     min-height: 100%;
     color: var(--text-color);
+    overflow-wrap: anywhere;
     font-family: "Fira Sans", sans-serif;
     font-size: $base-font-size;
     text-rendering: optimizeLegibility;
@@ -329,10 +330,12 @@ div.content-container {
         img, video {
             position: relative;
             z-index: 3;
+            max-width: 100%;
             &.inline.svg {
                 height: 1em;
                 vertical-align: middle;
                 display: inline-block;
+                top: -1.5px;
             }
             &.small {
                 max-height: $content-image-small-height;
@@ -344,6 +347,8 @@ div.content-container {
 
         table:not(#commento table) {
             table-layout: auto;
+            max-width: 100%;
+            overflow-x: auto;
             width: 100%;
             border-spacing: 0;
             border: 1px solid var(--border-color);

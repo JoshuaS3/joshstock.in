@@ -1,7 +1,6 @@
 #!/bin/bash
 
-# this file is automatically updated, although the pre-receive hook must be placed manually:
-# 'pre-receive' -> '.git/hooks/pre-receive'
+# this file must be placed manually at '.git/hooks/post-receive'
 
 TARGET="/home/ubuntu/joshstockin-deploy"
 GIT_DIR="/home/ubuntu/joshstockin.git"

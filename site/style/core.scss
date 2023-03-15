@@ -271,7 +271,7 @@ div.content-container {
                     }
                     @media (max-width: $page-compress-width + $base-font-size*8) {
                         position: unset;
-                        margin-left: $base-font-size;
+                        margin-left: 6px;
                     }
                 }
             }

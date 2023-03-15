@@ -22,19 +22,19 @@ def run(data):
         ),
         hg.DIV(
             hg.H2("Links", id="links") if len(data.links) > 0 else "",
-            *[
-                hg.P(
-                    hg.CODE(link, style="margin-right: 0.5em"),
-                    hg.A(data.links[link], href=data.links[link], target="_blank"),
+            hg.UL(*[
+                hg.LI(
+                    hg.SPAN(link, style="margin-right: 0.5em"),
+                    hg.I(hg.A(data.links[link] if not data.links[link].startswith("/static") else data.links[link].split("/")[-1], href=data.links[link], target="_blank")),
                 )
                 for link in data.links
-            ],
+            ]),
             hg.P(
                 hg.B("Article hyperlink: "),
-                hg.A(
+                hg.I(hg.A(
                     f"https://joshstock.in/blog/{data.identifier}",
                     href=f"/blog/{data.identifier}",
-                ),
+                )),
             ),
             hg.H2("Comments", id="comments"),
             hg.P(

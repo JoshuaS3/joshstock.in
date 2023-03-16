@@ -24,6 +24,7 @@ _paq.push(["setDocumentTitle", document.domain + "/" + document.title]);
 _paq.push(["setCookieDomain", "*.*.joshstock.in"]);
 _paq.push(["setDomains", ["*.*.joshstock.in"]]);
 _paq.push(['trackPageView']);
+_paq.push(['enableHeartBeatTimer', 30]);
 _paq.push(['enableLinkTracking']);
 (function() {
     var u="//analytics.joshstock.in/";

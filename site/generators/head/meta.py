@@ -21,7 +21,7 @@ def run(data):
         hg.META(property="og:type", content="website"),
         hg.META(
             property="og:image",
-            content=data.thumbnail
+            content=data.thumbnail if not data.thumbnail.startswith("/") else f"https://joshstock.in{data.thumbnail}"
             if data.thumbnail != ""
             else "https://joshstock.in/static/images/river.jpg",
         ),
@@ -34,7 +34,7 @@ def run(data):
         hg.META(name="twitter:description", content=data.description),
         hg.META(
             name="twitter:image",
-            content=data.thumbnail
+            content=data.thumbnail if not data.thumbnail.startswith("/") else f"https://joshstock.in{data.thumbnail}"
             if data.thumbnail != ""
             else "https://joshstock.in/static/images/river.jpg",
         ),

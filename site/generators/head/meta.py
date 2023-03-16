@@ -13,6 +13,8 @@ def run(data):
         hg.TITLE(f"{data.title} - Josh Stockin"),
         hg.META(name="title", content=f"{data.title} - Josh Stockin"),
         hg.META(name="description", content=data.description),
+
+        # OG tags
         hg.META(property="og:site_name", content="Josh Stockin"),
         hg.META(property="og:title", content=f"{data.title} - Josh Stockin"),
         hg.META(property="og:description", content=data.description),
@@ -24,7 +26,18 @@ def run(data):
             else "https://joshstock.in/static/images/river.jpg",
         ),
         hg.META(property="og:url", content=f"https://joshstock.in{data.link}"),
-        hg.META(property="twitter:card", content="summary_large_image"),
+
+        # Twitter card
+        hg.META(name="twitter:card", content="summary_large_image"),
+        hg.META(name="twitter:creator", content="@JoshStockin"),
+        hg.META(name="twitter:title", content=f"{data.title} - Josh Stockin"),
+        hg.META(name="twitter:description", content=data.description),
+        hg.META(
+            name="twitter:image",
+            content=data.thumbnail
+            if data.thumbnail != ""
+            else "https://joshstock.in/static/images/river.jpg",
+        ),
     ]
 
     return contents

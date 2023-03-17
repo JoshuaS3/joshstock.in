@@ -25,12 +25,12 @@ Here are some of the technologies I've used.
 <figcaption>This is not a complete table, nor can I call myself an expert at
 these. They're just some things I've worked with in the past.</figcaption>
 
-**This page is incomplete and a WIP. It will change semi-frequently and likely
-split into several pages as I document projects and add information, media, and
-kanban boards to each. Each project listing will eventually encompass use
+**The following list is incomplete and a WIP. It will change semi-frequently as
+I continue to document projects and add information, media, and kanban boards
+to each project's page. Each project listing will eventually encompass use
 cases, major technologies used and/or technical details, and link to the
 relevant Git repositories or published blog articles.**
 
 ---
 
-Under construction; check [Git repositories](https://git.joshstock.in) instead
+{projects_list}

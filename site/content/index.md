@@ -12,9 +12,9 @@ thumbnail: /static/images/oct2022.jpg
 
 <p class="first">
 <style>
-p.first::first-line {
+p.first::first-line {{
     font-size: 1.5em;
-}
+}}
 </style>
 <img class="inline svg" src="/static/svg/wave.svg" style="height: 1.5em">
 <b>Hello!</b> I'm <i>Josh Stockin</i>, a 19-year-old engineering student

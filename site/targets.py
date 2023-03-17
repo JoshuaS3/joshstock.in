@@ -1,23 +1,26 @@
 # targets.py / Template engine for my website
 # Joshua Stockin / josh@joshstock.in / https://joshstock.in
 
+# Python standard lib
 import os
 import html
 from datetime import datetime, timezone, timedelta
 from xml.dom import minidom
 
+# External libraries
 import markdown2
 import htmlgenerator as hg
 import readtime
 import sass
 from feedgen.feed import FeedGenerator
 
+# Local imports
 from _utils import dotdict as namespace, current_dir, load_generators, list_files
 
 # Site generation metadata
 CONTENT_DIRECTORY = os.path.join(current_dir(), "content")
-SASS_DIRECTORY = os.path.join(current_dir(), "style")
-STATIC_DIRECTORY = os.path.join(current_dir(), "static")
+SASS_DIRECTORY    = os.path.join(current_dir(), "style")
+STATIC_DIRECTORY  = os.path.join(current_dir(), "static")
 
 blog_description = "Barely coherent ramblings about engineering projects, software, hardware, and other things."
 
@@ -25,34 +28,60 @@ blog_description = "Barely coherent ramblings about engineering projects, softwa
 GENERATORS_MODULE = "generators"
 GENERATORS = [
     "head.head",
-    "header",
+    "topbar",
     "footer",
     "blog.article",
     "blog.index",
     "blog.listing",
 ]
-
 generate = load_generators(GENERATORS_MODULE, GENERATORS)
 
-sitemap_root = minidom.Document()
-sitemap_urlset = sitemap_root.createElementNS("http://www.sitemap.org/schemas/sitemap/0.9", "urlset")
-sitemap_urlset.setAttribute("xmlns", sitemap_urlset.namespaceURI)
-sitemap_root.appendChild(sitemap_urlset)
-
-site_footer = generate("footer")
-
-def add_sitemap_url(url):
-    url_obj = sitemap_root.createElement("url")
-    loc_obj = sitemap_root.createElement("loc")
-    loc_obj.appendChild(sitemap_root.createTextNode(url))
-    url_obj.appendChild(loc_obj)
-    sitemap_urlset.appendChild(url_obj)
+def render_basic_page(page_data, *contents):
+    # construct page
+    page_generator = hg.HTML(
+        generate("head.head", page_data),
+        hg.BODY(
+            *generate("topbar", page_data),
+            hg.DIV(
+                hg.DIV(
+                    hg.mark_safe(contents[0]), _class="content-body"
+                ),
+                hg.DIV(_class="vfill"),
+                generate("footer"),
+                _class="content-container",
+            ),
+            onscroll="scroll()",
+        ),
+    )
+    return hg.render(page_generator, {}).encode("utf-8")
 
 
 # Site template implementation; returns dict {filename: data}
 def template() -> {str: str}:
     files = {}
 
+    # sitemap.xml
+    sitemap_root = minidom.Document()
+    sitemap_urlset = sitemap_root.createElementNS("http://www.sitemap.org/schemas/sitemap/0.9", "urlset")
+    sitemap_urlset.setAttribute("xmlns", sitemap_urlset.namespaceURI)
+    sitemap_root.appendChild(sitemap_urlset)
+    def add_sitemap_url(url, priority=1.0):
+        # <url>
+        url_obj = sitemap_root.createElement("url")
+        #   <loc>
+        loc_obj = sitemap_root.createElement("loc")
+        loc_obj.appendChild(sitemap_root.createTextNode(url))
+        url_obj.appendChild(loc_obj)
+        #   </loc>
+        #   <priority>
+        priority_obj = sitemap_root.createElement("priority")
+        priority_obj.appendChild(sitemap_root.createTextNode(str(priority)))
+        url_obj.appendChild(priority_obj)
+        #   </priority>
+        sitemap_urlset.appendChild(url_obj)
+        # </url>
+
+    # Atom and RSS feeds for blog
     articles_list = []
     fg = FeedGenerator()
     fg.id("https://joshstock.in/blog")
@@ -60,14 +89,22 @@ def template() -> {str: str}:
     fg.author({"name": "Josh Stockin", "email": "josh@joshstock.in", "uri": "https://joshstock.in"})
     fg.link(href="https://joshstock.in/blog", rel="alternate")
     fg.subtitle(blog_description)
-    fg.link(href="https://joshstock.in/atom", rel="self")
     fg.language("en")
 
+    # Setup for string templating
+    website_pages = []
+    class template_string_dict(dict):
+        def __missing__(self, key):
+            return "{" + key  + "}"
+    template_strings = template_string_dict()
+
+    # Iterate over content directory for markdown files
     for content_file in list_files(CONTENT_DIRECTORY, ".md"):
         f = open(content_file, "r")
         data = f.read()
         f.close()
 
+        # Compile markdown as markdown2 object with HTML, metadata
         content_html = markdown2.markdown(
             data,
             safe_mode=False,
@@ -86,61 +123,60 @@ def template() -> {str: str}:
             ],
         )
 
+        # Normalize content metadata
         page_data = namespace(content_html.metadata)
-
         page_data.link = page_data.link or ""
+        page_data.banner_image = page_data.banner_image or ""
+        page_data.thumbnail = page_data.thumbnail or page_data.banner_image
 
+        # type=="website"
         if page_data.type == "website":
-            page_generator = hg.HTML(
-                generate("head.head", page_data),
-                hg.BODY(
-                    *generate("header", page_data),
-                    hg.DIV(
-                        hg.DIV(hg.mark_safe(content_html), _class="content-body"),
-                        hg.DIV(_class="vfill"),
-                        site_footer,
-                        _class="content-container",
-                    ),
-                    onscroll="scroll()",
-                ),
-            )
-            files[page_data.index] = hg.render(page_generator, {}).encode("utf-8")
-            if page_data.index != "index.html":
-                add_sitemap_url("/" + page_data.index.rsplit(".html")[0])
-            else:
-                add_sitemap_url("/")
+            # save for templating later
+            website_pages.append((content_html, page_data))
+        # type=="website"
 
-        elif page_data.type == "article":  # Blog article handling
+        # type=="article"
+        elif page_data.type == "article":
+            # Blog article page metadata
             page_data.readtime = readtime.of_html(content_html, wpm=150)
-            page_data.thumbnail = page_data.banner_image
             page_data.link = "/blog/" + page_data.identifier
             page_data.links = page_data.links or {}
-            articles_list += [page_data]
             page_data.content = content_html
+            articles_list += [page_data]
 
-            page_generator = hg.HTML(
-                generate("head.head", page_data),
-                hg.BODY(
-                    *generate("header", page_data),
-                    hg.DIV(
-                        hg.DIV(
-                            *generate("blog.article", page_data), _class="content-body"
-                        ),
-                        hg.DIV(_class="vfill"),
-                        site_footer,
-                        _class="content-container",
-                    ),
-                    onscroll="scroll()",
-                ),
-            )
+            rendered = render_basic_page(page_data, hg.render(hg.DIV(*generate("blog.article", page_data)), {}))
 
-            files["blog/" + page_data.identifier + ".html"] = hg.render(
-                page_generator, {}
-            ).encode("utf-8")
+            # render, export, add to sitemap
+            files["blog/" + page_data.identifier + ".html"] = rendered
+            add_sitemap_url("/blog/" + page_data.identifier, priority=0.6)
+        # type=="article"
 
+        # type=="project"
+        elif page_data.type == "project":
+            pass
+            add_sitemap_url("/projects/" + page_data.identifier, priority=0.6)
+        # type=="project"
 
-    # Sort articles list by descending datestring
+    # end of content md files
+
+    # Template strings
     articles_list = sorted(articles_list, key=lambda x: x.datestring, reverse=True)
+    template_strings["articles_list"] = hg.render(hg.DIV(*[generate("blog.listing", x) for x in articles_list]), {})
+    #template_strings["projects_list"] = ""
+
+    # Apply templates
+    for website_page in website_pages:
+        content_html = website_page[0]
+        page_data = website_page[1]
+
+        templated = content_html.format_map(template_strings)
+        rendered = render_basic_page(page_data, templated)
+
+        files[page_data.index] = rendered
+        if page_data.index != "index.html":
+            add_sitemap_url("/" + page_data.index.rsplit(".html")[0], priority=0.8)
+        else:
+            add_sitemap_url("/", priority=1.0)
 
     # Create article entries for feed generator
     for page_data in articles_list:
@@ -154,42 +190,8 @@ def template() -> {str: str}:
         fe.updated(datetime_pub)
         fe.link(href="https://joshstock.in/blog/" + page_data.identifier)
 
-    # Create blog index page
-    blog_page_data = namespace(
-        title="Blog",
-        banner_image="",
-        thumbnail="",
-        link="/blog",
-        description=fg.subtitle(),
-    )
-    blog_page_generator = hg.HTML(
-        generate("head.head", blog_page_data),
-        hg.BODY(
-            *generate("header", blog_page_data),
-            hg.DIV(
-                hg.DIV(
-                    hg.DIV(
-                        hg.H1("Blog ", hg.IMG(src="/static/svg/memo.svg", _class="inline svg")),
-                        hg.P(
-                            fg.subtitle(), hg.BR(),
-                            hg.SPAN("[", hg.A("Atom feed", href="/atom"), "] ", style="font-size: 0.75em; color: var(--caption-color)"),
-                            hg.SPAN("[", hg.A("RSS feed", href="/rss"), "]", style="font-size: 0.75em; color: var(--caption-color)")
-                        )
-                    ),
-                    *[generate("blog.listing", x) for x in articles_list],
-                    _class="content-body",
-                ),
-                hg.DIV(_class="vfill"),
-                site_footer,
-                _class="content-container",
-            ),
-            onscroll="scroll()",
-        ),
-    )
-    files["blog.html"] = hg.render(blog_page_generator, {}).encode("utf-8")
-    add_sitemap_url("/blog")
-
-    # Feeds
+    # Generate Atom and RSS fees for blog
+    fg.link(href="https://joshstock.in/atom", rel="self")
     files["atom.xml"] = fg.atom_str(pretty=True)
     fg.link(href="https://joshstock.in/rss", rel="self", replace=True)
     files["rss.xml"] = fg.rss_str(pretty=True)
@@ -218,6 +220,7 @@ def template() -> {str: str}:
             os.path.join("static", os.path.relpath(static_file, STATIC_DIRECTORY))
         ] = data
 
+    # Compile XML, export sitemap
     files["sitemap.xml"] = sitemap_root.toprettyxml(indent="\t").encode("utf-8")
 
     return files

@@ -256,6 +256,9 @@ div.content-container {
             &.header {
                 position: relative;
                 scroll-margin-top: 70px;
+                @media (max-width: $page-compress-width + $base-font-size*8) {
+                    scroll-margin-top: 130px;
+                }
                 .anchor {
                     opacity: 0.3;
                     position: absolute;
@@ -315,6 +318,7 @@ div.content-container {
                 padding: 1em;
                 margin: 0;
                 overflow-x: auto;
+                font-size: 0.8em;
             }
         }
 
@@ -322,9 +326,9 @@ div.content-container {
             border: 1px solid var(--border-color);
             border-radius: 4px;
             padding: 0 2px;
-            margin-right: 2px;
             background-color: var(--code-background-color);
             color: var(--code-text-color);
+            font-size: 0.85em;
         }
 
         img, video {

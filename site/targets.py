@@ -162,7 +162,7 @@ def template() -> {str: str}:
     # Template strings
     articles_list = sorted(articles_list, key=lambda x: x.datestring, reverse=True)
     template_strings["articles_list"] = hg.render(hg.DIV(*[generate("blog.listing", x) for x in articles_list]), {})
-    #template_strings["projects_list"] = ""
+    template_strings["projects_list"] = '<p>Under construction; check <a rel="noopener" target="_blank" href="https://git.joshstock.in">Git repositories</a> instead</p>'
 
     # Apply templates
     for website_page in website_pages:

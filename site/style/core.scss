@@ -257,7 +257,7 @@ div.content-container {
                 position: relative;
                 scroll-margin-top: 70px;
                 @media (max-width: $page-compress-width + $base-font-size*8) {
-                    scroll-margin-top: 130px;
+                    scroll-margin-top: 150px;
                 }
                 .anchor {
                     opacity: 0.3;

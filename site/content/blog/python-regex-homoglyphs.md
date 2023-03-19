@@ -47,8 +47,8 @@ arbitrary regex patterns, which would help in looking at context to prevent
 [false positives](https://www.wikiwand.com/en/Scunthorpe_problem). When
 expanding filter strings, the bot could not differentiate between literal
 characters and special regex tokens. So, instead of the valid regular
-expression string `^asdf(.*)$` (which matches "asdf" followed by anything else,
-only if "asdf" is at the beginning of the message) being converted into the
+expression string `^asdf(.*)$` (which matches anything following "asdf", only
+if "asdf" is at the beginning of the message) being converted into the
 following, preserving special regex tokens as desired...
 
 ```bash

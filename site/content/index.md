@@ -62,22 +62,29 @@ internship at *Milwaukee Tool* for the summer of 2023.**
     <figcaption>Snow plow parked in driveway sometime around early 2021.</figcaption>
 </figure>
 
-As of 01/2023, current projects include:
+As of 05/2023, current WIP personal projects include:
 
-- The next revision of the snow plow (new motors, overhauled electronics with
-  new controllers, sensors, and peripherals, rewritten firmware)
-- Website rewrite (https://joshstock.in)
-- A carbon dioxide (CO2) monitoring/plotting/analytics device (ESP32, ePaper
-  display)
-- resty-gitweb — Git version control interface for HTTP, written for OpenResty
-  (live prototype at https://git.joshstock.in)
-- s3-bsync — Python CLI tool for file backup and bidirectional syncing between
-  local filesystem and Amazon S3
+- *Embedded/Firmware*
+  - ePaper display (EPD) driver firmware. Lightweight graphics library, drop-in
+    hardware/serial communications wrappers. Planned support for ESP-IDF
+    (ESP32), Arduino
+  - The next revision of the RC snow plow (new electrical board, new motors and
+    motor controllers, sensors and peripherals, rewritten firmware)
+  - A handheld carbon dioxide (CO2) monitoring/plotting/analytics device
+    (ESP32, ePaper display, 3D printed housing)
+- *Software*
+  - resty-gitweb — Git version control interface for HTTP, written for
+    OpenResty, uses libgit2 (live prototype at https://git.joshstock.in)
+  - s3-bsync — Python CLI tool for file backup and bidirectional syncing
+    between local filesystem and Amazon S3
+  - zydeco — Future idea for a procedural generation world simulator. Graphics
+    programming experiment.
+  - ~~Website rewrite (https://joshstock.in)~~ (FINISHED)
 
-Progress on each is sporadic considering I'm a full time student. At some point
-I wish to study graphics programming, procedural generation, and
-geology/climate simulation. Eventually I'll populate the [projects](/projects)
-page with more info about these.
+I'll try over the next few months to populate the Blog and Projects pages with
+information on these. Progress on each is very sporadic because I'm a full-time
+student and worker.  If I'm not working on these I'm probably reading
+something. I finally got a copy of K&R 😃
 
 Oh, and I'm also a survivor of [severe scoliosis](/static/images/scoliosis.png).
 

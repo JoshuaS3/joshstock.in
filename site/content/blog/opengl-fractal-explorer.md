@@ -44,7 +44,7 @@ explorer (transform, zoom, pan) with progressive refine:
 2. [Notes on Fractal Computation](#notes-on-fractal-computation)
   1. [Divergence](#divergence)
   2. [Iteration Count](#iteration-count)
-  3. [Float-Point Precision](#floating-point-precision)
+  3. [Floating-Point Precision](#floating-point-precision)
 3. [Rendering on the GPU](#rendering-on-the-gpu)
   1. [Using a Fragment Shader](#using-a-fragment-shader)
   2. [Using a Compute Shader](#using-a-compute-shader)
@@ -231,7 +231,7 @@ This isn't ideal but it's the best I could come up with (or cared to,
 considering this was not a planned project) for a realtime renderer. Fractal
 dive renderers use high-level CPU software implementations like
 [BigFloat](https://github.com/nicowilliams/bigfloat) for arbitrary-precision
-floating point computation, but this would be disastrously slow for a realtime
+floating-point computation, but this would be disastrously slow for a realtime
 application (and be incompatible with GPU acceleration).
 
 # Rendering on the GPU
@@ -301,7 +301,7 @@ glDispatchCompute((m_windowWidth+31)/32, (m_windowHeight+31)/32, 1);
 Splitting up the screen into 32x32 chunks is pretty arbitrary. GPUs are very
 heavily designed for parallelism, so, generally, splitting work up into chunks
 means things will get done more quickly, but there is an upper limit to this.
-In my experimentation, 32x32 chunks seemed to work best.
+In my experimentation, 32x32 chunks seemed to work best for whatever reason.
 
 The compute shader looks like this:
 
@@ -328,11 +328,12 @@ void main()
 }
 ```
 
-The only data we're storing here is a single number per pixel: the number of
-iterations it takes for the pixel's corresponding point to diverge. The same
-texture is then fed into the fragment shader during the rendering stage, which
-reads these values and spits out colors to the screen accordingly. `-1` can be
-used to indicate a point that doesn't diverge (in the set, colored black).
+The only data we're storing in the texture here is a single number per pixel:
+the number of iterations it takes for the pixel's corresponding point to
+diverge. The same texture is then fed into the fragment shader during the
+rendering stage, which reads these values and spits out colors to the screen
+accordingly. `-1` can be used to indicate a point that doesn't diverge (in the
+set, colored black).
 
 This is great and all, but it doesn't really solve the issue with high
 iteration counts slowing things down. When zooming in a lot, the application
@@ -400,10 +401,10 @@ if (do_compute)
 For each pixel, the routine then stores either the new computed value or, if
 nothing was computed, does nothing. Correspondingly, the fragment shader must
 be updated for this behavior as well. Following step 1, most elements in the
-texture will be empty; to prevent the screen from displaying mostly uncomputed
-pixels (undefined behavior?), we should check whether a pixel has been computed
-before trying to use it, and use the nearest computed pixel if the first hasn't
-been.
+texture will still be empty; to prevent the screen from displaying mostly
+uncomputed pixels (undefined behavior?), we should check whether a pixel has
+been computed before trying to use it, and use the nearest computed pixel if
+the first hasn't been.
 
 The resulting behavior is this:
 
@@ -417,23 +418,26 @@ within the span of a single frame, i.e. preventing framerate drops. This is
 great for user actions, where zooming and panning happen for as long as the
 mouse input lasts—potentially hundreds of frames.
 
-Suppose a single step takes longer than a frame to compute. Well, that's no
-worry either since *compute shaders act independent of the rendering pipeline*,
-so you can make use of asynchronous OpenGL interfaces like [fences and memory
+Suppose, though, that a single step takes longer than a frame to compute. Well,
+that's no worry either since *compute shaders act independent of the rendering
+pipeline*, so rendering is not being held up by a compute shader still running.
+Furthermore, to prevent compute dispatches from overlapping, you can make use
+of asynchronous OpenGL interfaces like [fences and memory
 barriers](https://www.khronos.org/opengl/wiki/Memory_Model) to prevent
 dispatching a new compute for the next step until the previous has finished,
 framerate unaffected.
 
-My implementation can actually take this a step further, allowing the point's
-z-transform itself to be distributed across computes, resulting in *multiple*
-interlacing passes. It does this by storing another two elements per pixel in
-the texture; the real and imaginary components of the z-transform output, for
-it to pick up with on the start of the next compute. This poses the same
-precision issues as before, however, considering OpenGL textures only allow you
-to store elements up to FP32 precision, so it doesn't work very well at high
-zoom levels. We can work around this by using a separate texture with four
-elements per pixel: two 32-bit elements for the real component, and two more
-32-bit elements for the imaginary component. See
+My implementation can actually take the idea of progressive refine a step
+further, allowing the point's z-transform itself to be distributed across
+computes, resulting in *multiple* interlacing passes. It does this by storing
+another two elements per pixel in the texture, the real and imaginary
+components of the z-transform output, for it to pick up with on the start of
+the next compute. This poses the same precision issues as before, however,
+considering OpenGL textures only allow you to store elements up to FP32
+precision, so it doesn't work very well at high zoom levels. We can work around
+this by using a separate texture with four elements per pixel: two 32-bit
+elements for the real component, and two more 32-bit elements for the imaginary
+component. See
 [floatBitsToInt](https://registry.khronos.org/OpenGL-Refpages/gl4/html/floatBitsToInt.xhtml)
 and related GLSL functions for a way you might accomplish this.
 

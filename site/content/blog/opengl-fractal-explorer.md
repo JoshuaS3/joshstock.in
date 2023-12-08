@@ -217,8 +217,7 @@ Also, since graphics applications generally don't need more than 32 bits of
 floating-point precision, GPUs tend to have only 32-bit wide FPUs, with a slow
 processing path for FP64 (about 1/64 the speed of FP32 according to some
 benchmarks). Despite this, GPUs have significantly more floating-point
-execution units than CPUs, so the performance sacrifice is still acceptable for
-the extra precision.
+execution units than CPUs, so we're *still* running faster on the GPU.
 
 With 64-bit precision on the GPU, we can zoom in by a factor of about 14 times
 before we hit our precision limit.

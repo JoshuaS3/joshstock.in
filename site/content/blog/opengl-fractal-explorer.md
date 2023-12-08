@@ -271,18 +271,18 @@ Clearly, a different strategy was needed.
 
 ## Using a Compute Shader
 
-[Compute shaders](https://www.khronos.org/opengl/wiki/Compute_Shader) are
+The [compute shader](https://www.khronos.org/opengl/wiki/Compute_Shader) is
 OpenGL's interface for general purpose GPU (GPGPU) programming—analogous to
-NVIDIA's CUDA, which lets you use the GPU for arbitrary
-floating-point-intensive computation—providing cross-platform support and
-integrating with the rest of the graphics library, for things like accessing
-textures. Perfect!!
+NVIDIA's CUDA, which lets you use a GPU for arbitrary floating-point-intensive
+computation. Compute shaders provide cross-platform support and integrate with
+the rest of the graphics library, for things like accessing textures. Perfect!!
 
-Meant to be used for GPGPU programming, compute shaders aren't built into the
-core OpenGL rendering pipeline. Instead, they must be explicitly invoked
+As they're meant to be used for GPGPU programming, compute shaders aren't built
+into the core OpenGL rendering pipeline. They must be explicitly invoked
 (dispatched) separate of the rendering sequence. This is actually great for our
-renderer because controlling when computes happen means we can have them run
-only when they're actually needed (when the user pans, zooms, or transforms).
+renderer because being able to control when computes happen means we can have
+them run only when they're actually needed (when the user pans, zooms, or
+transforms).
 
 ```cpp
 // inside application C++ "world logic"

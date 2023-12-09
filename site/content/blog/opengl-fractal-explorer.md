@@ -124,7 +124,7 @@ which is what the fractal is named after.
 
 # Notes on Fractal Computation
 
-I want to talk about some nuances of computing and rendering fractals. As you
+I want to talk about some details of computing and rendering fractals. As you
 would expect, for a full quality render you will need to compute iterations for
 every pixel in the image. **<i>This is very computationally expensive.</i>**
 Even more troublesome is having to calculate this for *every frame* when

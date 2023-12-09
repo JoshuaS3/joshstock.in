@@ -133,13 +133,14 @@ panning around and zooming in if you're writing a realtime explorer.
 ## Divergence
 
 Let's first define what is meant by "diverge" when iterating over a
-z-transform. Mathematically, this means the point transforms off to infinity.
-We can discard a point from the set long before infinity though—in fact, for
-the three fractals mentioned above, any complex number with a distance from the
-origin *greater than 2* will diverge during a z-transform. Storing the square
-of this—to prevent having to compute square roots when applying the Pythagorean
-theorem—in a `discard_threshold_squared` constant or parameter, we can speed
-things up by stopping before unneeded iterations in our compute code:
+z-transform. Mathematically, this means the point is unbounded, or transforms
+off to infinity. We can discard a point from the set long before infinity
+though—in fact, for the three fractals mentioned above, any complex number with
+a distance from the origin *greater than 2* will diverge during a z-transform.
+Storing the square of this—to prevent having to compute square roots when
+applying the Pythagorean theorem—in a `discard_threshold_squared` constant or
+parameter, we can speed things up by stopping before unneeded iterations in our
+compute code:
 
 ```c
 const int discard_threshold_squared = 4;
@@ -175,9 +176,9 @@ set the iteration count too low, we get undetailed renders like the following
 </figure>
 
 Not only that, but zooming in only makes the boundary seem coarser. To
-compensate for this, I define my maximum iteration count to actually be a
-function of zoom level, where `n0` is a "base" iteration count parameter and
-`s` is the scale (decreases when zooming in).
+compensate for this, I define my maximum iteration count to be a function of
+zoom level, where `n0` is a "base" iteration count parameter and `s` is the
+scale (decreases when zooming in).
 
 <svg xmlns="http://www.w3.org/2000/svg" width="258.972px" height="55.332px" viewBox="0 -1269 9538.8 2038" xmlns:xlink="http://www.w3.org/1999/xlink" aria-hidden="true" style=""><defs><path id="MJX-125-TEX-I-1D45B" d="M21 287Q22 293 24 303T36 341T56 388T89 425T135 442Q171 442 195 424T225 390T231 369Q231 367 232 367L243 378Q304 442 382 442Q436 442 469 415T503 336T465 179T427 52Q427 26 444 26Q450 26 453 27Q482 32 505 65T540 145Q542 153 560 153Q580 153 580 145Q580 144 576 130Q568 101 554 73T508 17T439 -10Q392 -10 371 17T350 73Q350 92 386 193T423 345Q423 404 379 404H374Q288 404 229 303L222 291L189 157Q156 26 151 16Q138 -11 108 -11Q95 -11 87 -5T76 7T74 17Q74 30 112 180T152 343Q153 348 153 366Q153 405 129 405Q91 405 66 305Q60 285 60 284Q58 278 41 278H27Q21 284 21 287Z"></path><path id="MJX-125-TEX-N-28" d="M94 250Q94 319 104 381T127 488T164 576T202 643T244 695T277 729T302 750H315H319Q333 750 333 741Q333 738 316 720T275 667T226 581T184 443T167 250T184 58T225 -81T274 -167T316 -220T333 -241Q333 -250 318 -250H315H302L274 -226Q180 -141 137 -14T94 250Z"></path><path id="MJX-125-TEX-I-1D460" d="M131 289Q131 321 147 354T203 415T300 442Q362 442 390 415T419 355Q419 323 402 308T364 292Q351 292 340 300T328 326Q328 342 337 354T354 372T367 378Q368 378 368 379Q368 382 361 388T336 399T297 405Q249 405 227 379T204 326Q204 301 223 291T278 274T330 259Q396 230 396 163Q396 135 385 107T352 51T289 7T195 -10Q118 -10 86 19T53 87Q53 126 74 143T118 160Q133 160 146 151T160 120Q160 94 142 76T111 58Q109 57 108 57T107 55Q108 52 115 47T146 34T201 27Q237 27 263 38T301 66T318 97T323 122Q323 150 302 164T254 181T195 196T148 231Q131 256 131 289Z"></path><path id="MJX-125-TEX-N-29" d="M60 749L64 750Q69 750 74 750H86L114 726Q208 641 251 514T294 250Q294 182 284 119T261 12T224 -76T186 -143T145 -194T113 -227T90 -246Q87 -249 86 -250H74Q66 -250 63 -250T58 -247T55 -238Q56 -237 66 -225Q221 -64 221 250T66 725Q56 737 55 738Q55 746 60 749Z"></path><path id="MJX-125-TEX-N-3D" d="M56 347Q56 360 70 367H707Q722 359 722 347Q722 336 708 328L390 327H72Q56 332 56 347ZM56 153Q56 168 72 173H708Q722 163 722 153Q722 140 707 133H70Q56 140 56 153Z"></path><path id="MJX-125-TEX-N-30" d="M96 585Q152 666 249 666Q297 666 345 640T423 548Q460 465 460 320Q460 165 417 83Q397 41 362 16T301 -15T250 -22Q224 -22 198 -16T137 16T82 83Q39 165 39 320Q39 494 96 585ZM321 597Q291 629 250 629Q208 629 178 597Q153 571 145 525T137 333Q137 175 145 125T181 46Q209 16 250 16Q290 16 318 46Q347 76 354 130T362 333Q362 478 354 524T321 597Z"></path><path id="MJX-125-TEX-N-6C" d="M42 46H56Q95 46 103 60V68Q103 77 103 91T103 124T104 167T104 217T104 272T104 329Q104 366 104 407T104 482T104 542T103 586T103 603Q100 622 89 628T44 637H26V660Q26 683 28 683L38 684Q48 685 67 686T104 688Q121 689 141 690T171 693T182 694H185V379Q185 62 186 60Q190 52 198 49Q219 46 247 46H263V0H255L232 1Q209 2 183 2T145 3T107 3T57 1L34 0H26V46H42Z"></path><path id="MJX-125-TEX-N-6F" d="M28 214Q28 309 93 378T250 448Q340 448 405 380T471 215Q471 120 407 55T250 -10Q153 -10 91 57T28 214ZM250 30Q372 30 372 193V225V250Q372 272 371 288T364 326T348 362T317 390T268 410Q263 411 252 411Q222 411 195 399Q152 377 139 338T126 246V226Q126 130 145 91Q177 30 250 30Z"></path><path id="MJX-125-TEX-N-67" d="M329 409Q373 453 429 453Q459 453 472 434T485 396Q485 382 476 371T449 360Q416 360 412 390Q410 404 415 411Q415 412 416 414V415Q388 412 363 393Q355 388 355 386Q355 385 359 381T368 369T379 351T388 325T392 292Q392 230 343 187T222 143Q172 143 123 171Q112 153 112 133Q112 98 138 81Q147 75 155 75T227 73Q311 72 335 67Q396 58 431 26Q470 -13 470 -72Q470 -139 392 -175Q332 -206 250 -206Q167 -206 107 -175Q29 -140 29 -75Q29 -39 50 -15T92 18L103 24Q67 55 67 108Q67 155 96 193Q52 237 52 292Q52 355 102 398T223 442Q274 442 318 416L329 409ZM299 343Q294 371 273 387T221 404Q192 404 171 388T145 343Q142 326 142 292Q142 248 149 227T179 192Q196 182 222 182Q244 182 260 189T283 207T294 227T299 242Q302 258 302 292T299 343ZM403 -75Q403 -50 389 -34T348 -11T299 -2T245 0H218Q151 0 138 -6Q118 -15 107 -34T95 -74Q95 -84 101 -97T122 -127T170 -155T250 -167Q319 -167 361 -139T403 -75Z"></path><path id="MJX-125-TEX-N-32" d="M109 429Q82 429 66 447T50 491Q50 562 103 614T235 666Q326 666 387 610T449 465Q449 422 429 383T381 315T301 241Q265 210 201 149L142 93L218 92Q375 92 385 97Q392 99 409 186V189H449V186Q448 183 436 95T421 3V0H50V19V31Q50 38 56 46T86 81Q115 113 136 137Q145 147 170 174T204 211T233 244T261 278T284 308T305 340T320 369T333 401T340 431T343 464Q343 527 309 573T212 619Q179 619 154 602T119 569T109 550Q109 549 114 549Q132 549 151 535T170 489Q170 464 154 447T109 429Z"></path><path id="MJX-125-TEX-N-2061" d=""></path><path id="MJX-125-TEX-N-2B" d="M56 237T56 250T70 270H369V420L370 570Q380 583 389 583Q402 583 409 568V270H707Q722 262 722 250T707 230H409V-68Q401 -82 391 -82H389H387Q375 -82 369 -68V230H70Q56 237 56 250Z"></path><path id="MJX-125-TEX-N-31" d="M213 578L200 573Q186 568 160 563T102 556H83V602H102Q149 604 189 617T245 641T273 663Q275 666 285 666Q294 666 302 660V361L303 61Q310 54 315 52T339 48T401 46H427V0H416Q395 3 257 3Q121 3 100 0H88V46H114Q136 46 152 46T177 47T193 50T201 52T207 57T213 61V578Z"></path></defs><g stroke="currentColor" fill="currentColor" stroke-width="0" transform="scale(1,-1)"><g data-mml-node="math"><g data-mml-node="mtable"><g data-mml-node="mtr" transform="translate(0,-73)"><g data-mml-node="mtd"><g data-mml-node="mi"><use data-c="1D45B" xlink:href="#MJX-125-TEX-I-1D45B"></use></g><g data-mml-node="mo" transform="translate(600,0)"><use data-c="28" xlink:href="#MJX-125-TEX-N-28"></use></g><g data-mml-node="mi" transform="translate(989,0)"><use data-c="1D460" xlink:href="#MJX-125-TEX-I-1D460"></use></g><g data-mml-node="mo" transform="translate(1458,0)"><use data-c="29" xlink:href="#MJX-125-TEX-N-29"></use></g><g data-mml-node="mo" transform="translate(2124.8,0)"><use data-c="3D" xlink:href="#MJX-125-TEX-N-3D"></use></g><g data-mml-node="msub" transform="translate(3180.6,0)"><g data-mml-node="mi"><use data-c="1D45B" xlink:href="#MJX-125-TEX-I-1D45B"></use></g><g data-mml-node="mn" transform="translate(633,-150) scale(0.707)"><use data-c="30" xlink:href="#MJX-125-TEX-N-30"></use></g></g><g data-mml-node="msub" transform="translate(4383.8,0)"><g data-mml-node="mi"><use data-c="6C" xlink:href="#MJX-125-TEX-N-6C"></use><use data-c="6F" xlink:href="#MJX-125-TEX-N-6F" transform="translate(278,0)"></use><use data-c="67" xlink:href="#MJX-125-TEX-N-67" transform="translate(778,0)"></use></g><g data-mml-node="mn" transform="translate(1311,-241.4) scale(0.707)"><use data-c="32" xlink:href="#MJX-125-TEX-N-32"></use></g></g><g data-mml-node="mo" transform="translate(6098.3,0)"><use data-c="2061" xlink:href="#MJX-125-TEX-N-2061"></use></g><g data-mml-node="mo" transform="translate(6098.3,0)"><use data-c="28" xlink:href="#MJX-125-TEX-N-28"></use></g><g data-mml-node="mn" transform="translate(6487.3,0)"><use data-c="32" xlink:href="#MJX-125-TEX-N-32"></use></g><g data-mml-node="mo" transform="translate(7209.6,0)"><use data-c="2B" xlink:href="#MJX-125-TEX-N-2B"></use></g><g data-mml-node="mfrac" transform="translate(8209.8,0)"><g data-mml-node="mn" transform="translate(220,676)"><use data-c="31" xlink:href="#MJX-125-TEX-N-31"></use></g><g data-mml-node="mi" transform="translate(235.5,-686)"><use data-c="1D460" xlink:href="#MJX-125-TEX-I-1D460"></use></g><rect width="700" height="60" x="120" y="220"></rect></g><g data-mml-node="mo" transform="translate(9149.8,0)"><use data-c="29" xlink:href="#MJX-125-TEX-N-29"></use></g></g></g></g></g></g></svg>
 
@@ -199,8 +200,8 @@ modern CPUs and GPUs, there are floating-point arithmetic units (FPUs) built
 into hardware that make computation with floating-point types significantly
 faster than it would be with a software-only implementation. FPUs nowadays come
 in sizes of 16 bits (half-width/FP16), 32 bits (single-width/FP32), 64 bits
-(double-width/FP64), and 128 bits (quad-width/FP128). As the names indicate,
-more bits means greater precision.
+(double-width/FP64), and 128 bits (quad-width/FP128). As you might be able to
+guess, more bits means larger values means greater precision.
 
 This pertains to computing fractals because the points needed on the complex
 plane are decimals, not integers. **<i>Zooming into one point—effectively
@@ -228,25 +229,27 @@ before we hit our precision limit.
 
 This isn't ideal but it's the best I could come up with (or cared to,
 considering this was not a planned project) for a realtime renderer. Fractal
-dive renderers use high-level CPU software implementations like
-[BigFloat](https://github.com/nicowilliams/bigfloat) for arbitrary-precision
-floating-point computation, but this would be disastrously slow for a realtime
-application (and be incompatible with GPU acceleration).
+dive renderers use high-level CPU software implementations for
+*arbitrary-precision* floating-point computation, like
+[BigFloat](https://github.com/nicowilliams/bigfloat), but this would be
+disastrously slow for a realtime application (and be incompatible with GPU
+acceleration).
 
 # Rendering on the GPU
 
 ## Using a Fragment Shader
 
-The oversimplified 10,000-foot view of the basic OpenGL rendering pipeline for
-an object is as follows:
+The 10,000-foot view of the basic OpenGL rendering pipeline for an object is as
+follows:
 
 1. You give the graphics card mesh data and some arbitrary program-defined
    render settings
 2. A vertex shader interprets this mesh data as primitive shapes, e.g.
-   triangles, with world position data
-3. A fragment shader uses the geometry of the primitive each fragment (pixel,
-   basically) is attached to and the given arbitrary render settings (including
-   textures) to color that fragment
+   triangles, and applies perspective transformations to scale, rotate, and
+   position them relative to the screen or "camera"
+3. A fragment shader uses the geometry of the primitive plus the given
+   arbitrary render settings (including textures) to fill in the colors of
+   fragments (pixels, basically) within the primitive
 4. The graphics card does some linear algebra magic to combine the computed
    data for all objects into a rendered scene, the framebuffer
 
@@ -254,17 +257,20 @@ an object is as follows:
 OpenGL you know this is so insanely simplified it could just be called "wrong,"
 but it's a good enough overview for the purposes of this writeup.</figcaption>
 
-Rather than doing fractal computation on the CPU and loading the result into a
-texture, my initial attempt used an OpenGL fragment shader to do computation
-entirely on the GPU. It seemed like a good idea; given two triangles filling
-the entire screen, the fragment shader is executed for every pixel of the frame
-and outputs a color for that pixel. However, there were some drawbacks:
+Knowing my CPU would be too slow for realtime rendering, rather than doing
+fractal computation on the CPU and loading the result into a texture to be
+displayed by the GPU, my initial attempt used an OpenGL fragment shader to do
+computation directly on the GPU. It seemed like a good idea; given two
+triangles filling the entire screen, the fragment shader is executed for every
+pixel of the frame and outputs a color for that pixel. However, there were some
+drawbacks:
 
 1. Everything was redrawn every frame, even if the user hadn't moved,
    unnecessarily consuming GPU resources
 2. This was extraordinarily slow at high iteration counts (high zoom)
 3. Iterative refine—either splitting iterations across frames or breaking the
-   frame up into chunks—wasn't feasible
+   frame up into chunks—wasn't feasible (or wouldn't be efficient/elegant
+   enough)
 
 Clearly, a different strategy was needed.
 
@@ -273,15 +279,16 @@ Clearly, a different strategy was needed.
 The [compute shader](https://www.khronos.org/opengl/wiki/Compute_Shader) is
 OpenGL's interface for general purpose GPU (GPGPU) programming—analogous to
 NVIDIA's CUDA, which lets you use a GPU for arbitrary floating-point-intensive
-computation. Compute shaders provide cross-platform support and integrate with
-the rest of the graphics library, for things like accessing textures. Perfect!!
+computation. Unlike CUDA however, compute shaders provide cross-platform
+support (including integrated GPUs) and integrate with the rest of the graphics
+library, for things like accessing textures. Perfect!!
 
 As they're meant to be used for GPGPU programming, compute shaders aren't built
 into the core OpenGL rendering pipeline. They must be explicitly invoked
-(dispatched) separate of the rendering sequence. This is actually great for our
-renderer because being able to control when computes happen means we can have
-them run only when they're actually needed (when the user pans, zooms, or
-transforms).
+(dispatched) by the application, separate of the rendering sequence. This is
+actually great for our renderer because being able to control when computes
+happen means we can have them run only when they're actually needed (when the
+user pans, zooms, or transforms).
 
 ```cpp
 // inside application C++ "world logic"
@@ -297,11 +304,6 @@ m_pComputeShaderUniformUploader->UploadUniforms(program);
 glDispatchCompute((m_windowWidth+31)/32, (m_windowHeight+31)/32, 1);
 ```
 
-Splitting up the screen into 32x32 chunks is pretty arbitrary. GPUs are very
-heavily designed for parallelism, so, generally, splitting work up into chunks
-means things will get done more quickly, but there is an upper limit to this.
-In my experimentation, 32x32 chunks seemed to work best for whatever reason.
-
 The compute shader looks like this:
 
 ```glsl
@@ -312,7 +314,7 @@ The compute shader looks like this:
 layout (local_size_x = 32, local_size_y = 32, local_size_z = 1) in;
 
 // arbitrary data/settings ("uniforms") uploaded by the application
-layout(rgba32f, binding = 0) uniform image2D texture0;
+layout(r32f, binding = 0) uniform image2D texture0;
 uniform ivec2 screen_size;
 uniform dvec2 offset; // indicates x/y position within the fractal
 uniform double scale; // decreases when zooming in
@@ -327,12 +329,24 @@ void main()
 }
 ```
 
-The only data we're storing in the texture here is a single number per pixel:
-the number of iterations it takes for the pixel's corresponding point to
-diverge. The same texture is then fed into the fragment shader during the
+Splitting up the screen into 32x32 chunks is pretty arbitrary. GPUs are very
+heavily designed for parallelism, so, generally, splitting work up into chunks
+means things will get done more quickly, but there is an upper limit to this.
+In my experimentation, 32x32 chunks seemed to work best for whatever reason.
+
+The only data we're storing in the texture during computes is a single number
+per pixel: the number of iterations it takes for the pixel's corresponding
+point to diverge. The same texture is then fed into the fragment shader during the
 rendering stage, which reads these values and spits out colors to the screen
 accordingly. `-1` can be used to indicate a point that doesn't diverge (in the
 set, colored black).
+
+<figcaption>Note the texture is declared in the computer shader as having
+format <code>r32f</code>; this indicates a single channel <code>r</code> with
+type FP32, though <code>r32i</code> would work just as well here. See
+possible formats in OpenGL documentation for <a
+href="https://registry.khronos.org/OpenGL-Refpages/gl4/html/glTexImage2D.xhtml">glTexImage2D</a>.
+Texture creation is managed by the application.</figcaption>
 
 This is great and all, but it doesn't really solve the issue with high
 iteration counts slowing things down. When zooming in a lot, the application
@@ -373,13 +387,13 @@ Every step after that, though, takes twice as long as the
 previous.</figcaption>
 
 Incorporating this into the fractal renderer, what we can do is pass some
-number to the compute shader which indicates which step we're on (1-7). The
-compute shader then indexes the above matrix at the pixel's relative position,
-compares that value to the instructed interlace step, and only computes if
-the values are equal.
+number to the compute shader which indicates which step we're on, [1-7]. The
+compute shader then indexes the above matrix at the pixel's position, compares
+that value to the instructed interlace step, and only computes if the values
+are equal.
 
 ```glsl
-uniform int interlace_layer;
+uniform int interlace_step;
 ```
 
 ```glsl
@@ -390,7 +404,7 @@ uniform int interlace_layer;
 int relative_pixel_grid_pos_x = gl_LocalInvocationID.x % 8;
 int relative_pixel_grid_pos_y = gl_LocalInvocationID.y % 8;
 
-bool do_compute = (ADAM7_MATRIX[relative_pixel_grid_pox_y][relative_pixel_grid_pos_x] == interlace_layer);
+bool do_compute = (ADAM7_MATRIX[relative_pixel_grid_pox_y][relative_pixel_grid_pos_x] == interlace_step);
 if (do_compute)
 {
     // z-transform

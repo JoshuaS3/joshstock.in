@@ -5,7 +5,7 @@ import htmlgenerator as hg
 def run(data):
     """Build HTML meta tags and insert tracking script"""
 
-    verify(data, ["title", "description", "thumbnail", "link"])
+    verify(data, ["type", "title", "description", "thumbnail", "link"])
 
     contents = [
         hg.META(http_equiv="content-type", content="text/html; charset=utf-8"),
@@ -13,6 +13,7 @@ def run(data):
         hg.TITLE(f"{data.title} - Josh Stockin"),
         hg.META(name="title", content=f"{data.title} - Josh Stockin"),
         hg.META(name="description", content=data.description),
+        hg.META(name="author", content="Josh Stockin") if data.type == "article" else "",
 
         # OG tags
         hg.META(property="og:site_name", content="Josh Stockin"),

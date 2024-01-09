@@ -404,7 +404,7 @@ uniform int interlace_step;
 int relative_pixel_grid_pos_x = gl_LocalInvocationID.x % 8;
 int relative_pixel_grid_pos_y = gl_LocalInvocationID.y % 8;
 
-bool do_compute = (ADAM7_MATRIX[relative_pixel_grid_pox_y][relative_pixel_grid_pos_x] == interlace_step);
+bool do_compute = (ADAM7_MATRIX[relative_pixel_grid_pos_y][relative_pixel_grid_pos_x] == interlace_step);
 if (do_compute)
 {
     // z-transform

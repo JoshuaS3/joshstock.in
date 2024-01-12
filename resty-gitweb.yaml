@@ -1,8 +1,23 @@
 ---
 
+- name: zydeco
+  description: "Experiment in graphics programming, C++, OpenGL, simulation techniques."
+  download:
+    - GIT git://joshstock.in/zydeco.git
+    - HTTPS https://git.joshstock.in/zydeco.git
+  urls:
+    - joshstock.in https://git.joshstock.in/zydeco
+    - GitHub https://github.com/JoshuaS3/zydeco
+  location:
+    dev: "/home/josh/repos/zydeco/.git"
+    prod: "/home/git/zydeco.git"
+  specialfiles:
+    - README README.md
+    - LICENSE LICENSE
+
 - name: ncurses-minesweeper
   description: "Terminal game of Minesweeper, implemented in C with ncurses."
-  download: # Using lists instead of dictionaries for this preserves key order in Lua tables
+  download:
     - GIT git://joshstock.in/ncurses-minesweeper.git
     - HTTPS https://git.joshstock.in/ncurses-minesweeper.git
   urls:
@@ -65,8 +80,7 @@
     - LICENSE LICENSE
 
 - name: s3-bsync
-  description: "Bidirectional syncing tool to sync local filesystem directories with S3 buckets."
-
+  description: "Bidirectional syncing tool to sync local filesystem directories with S3 buckets. (Incomplete)"
   download:
     - GIT git://joshstock.in/s3-bsync.git
     - HTTPS https://git.joshstock.in/s3-bsync.git
@@ -82,7 +96,7 @@
     - LICENSE LICENSE
 
 - name: lognestmonster
-  description: "A general-purpose single-header C logging library and parser for event-based logs."
+  description: "A general-purpose single-header C logging library and parser for event-based logs. (Incomplete)"
   download:
     - GIT git://joshstock.in/lognestmonster.git
     - HTTPS https://git.joshstock.in/lognestmonster.git

@@ -7,7 +7,7 @@ datestring: 2023-03-18
 banner_image: /static/images/futaba-filter.jpg
 links:
     futaba: https://github.com/strinking/futaba
-    confusable_homoglyphs: https://pypi.org/project/confusable_homoglyphs/
+    confusable-homoglyphs: https://pypi.org/project/confusable-homoglyphs/
     Python re module: https://docs.python.org/3/library/re.html
     Scunthorpe problem: https://www.wikiwand.com/en/Scunthorpe_problem
     Abstract Syntax Tree (AST): https://www.wikiwand.com/en/Abstract_syntax_tree
@@ -19,7 +19,7 @@ programming community I’m part of. As with most popular Discord bots, it
 incorporates its own filter to prohibit unwanted language.  However, to ensure
 coverage of messages like `as𝕕f` (notice non-ASCII `𝕕`) in case it’s told to
 filter `asdf` (an ASCII-only string), the bot makes use of the
-[confusable_homoglyphs](https://pypi.org/project/confusable_homoglyphs/) Python
+[confusable_homoglyphs](https://pypi.org/project/confusable-homoglyphs/) Python
 package to automatically expand an inputted filter string to cover these
 non-ASCII edge cases.
 
@@ -61,7 +61,7 @@ making it useless for arbitrary matching:
 ```bash
 [\^˄ˆ][a⍺ａ𝐚𝑎𝒂𝒶𝓪𝔞𝕒𝖆𝖺𝗮𝘢𝙖𝚊ɑα𝛂𝛼𝜶𝝰𝞪а][sｓ𝐬𝑠𝒔𝓈𝓼𝔰𝕤𝖘𝗌𝘀𝘴𝙨𝚜ꜱƽѕꮪ𑣁𐑈][dⅾⅆ𝐝𝑑𝒅𝒹𝓭𝔡𝕕𝖉𝖽𝗱𝘥𝙙𝚍ԁᏧᑯꓒ][f𝐟𝑓𝒇𝒻𝓯𝔣𝕗𝖋𝖿𝗳𝘧𝙛𝚏ꬵꞙſẝք][\(［❨❲〔﴾][\.𝅭․‎܁‎‎܂‎꘎‎𐩐‎‎٠‎۰ꓸ][\*⁎‎٭‎∗𐌟][\)］❩❳〕﴿]$
 ```
-<figcaption>Interestingly, the confusable_homoglyphs package doesn't list any
+<figcaption>Interestingly, the confusable-homoglyphs package doesn't list any
 special characters that look similar to <code>$</code>.</figcaption>
 
 ## The solution
@@ -293,7 +293,7 @@ None # Looks weird, but native compile yields this too. `findall` and `search` w
 ```
 <figcaption>This works likewise with re.Pattern.search() and other re.Pattern
 functions, and includes all native regex features. The only real limitation
-here is generating confusables, since <code>confusable_homoglyphs</code> doesn't seem to
+here is generating confusables, since <code>confusable-homoglyphs</code> doesn't seem to
 account for accent characters, e.g. <code>é</code> -> <code>e</code>.</figcaption>
 
 I submitted a pull request to the bot which would make any filter string
